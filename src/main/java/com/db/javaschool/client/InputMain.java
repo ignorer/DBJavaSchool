@@ -15,7 +15,7 @@ public class InputMain {
         }
 
         try (Scanner scanner = new Scanner(System.in)) {
-            try (Socket socket = new Socket("127.0.0.1", 6667);
+            try (Socket socket = new Socket("127.0.0.1", 6666);
                 DataOutputStream stream = new DataOutputStream(socket.getOutputStream())) {
                 while (true) {
                     String s = scanner.nextLine();

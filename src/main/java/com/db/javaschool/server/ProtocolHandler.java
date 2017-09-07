@@ -14,6 +14,9 @@ public class ProtocolHandler {
         this.context = context;
     }
 
+    /**
+     * Parses input JSON and calls appropriate command
+     */
     public void handle(String stringInput, Socket socket) {
         JSONObject jsonInput = new JSONObject(stringInput);
         String commandType = (String) jsonInput.get("type");
@@ -29,7 +32,7 @@ public class ProtocolHandler {
             case "hist":
                 command = new HistoryCommand(context);
                 break;
-            case "send":
+            case "snd":
                 command = new SendCommand(context);
                 break;
             default:
@@ -37,6 +40,6 @@ public class ProtocolHandler {
                 return;
         }
 
-        command.execute((String) jsonInput.get("msg"));
+        command.execute(jsonInput);
     }
 }

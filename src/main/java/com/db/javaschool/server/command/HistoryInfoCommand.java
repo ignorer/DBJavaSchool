@@ -1,6 +1,7 @@
 package com.db.javaschool.server.command;
 
 import com.db.javaschool.server.Context;
+import org.json.JSONObject;
 
 public class HistoryInfoCommand extends ServerCommand {
     public HistoryInfoCommand(Context context) {
@@ -8,7 +9,7 @@ public class HistoryInfoCommand extends ServerCommand {
     }
 
     @Override
-    public void execute(String message) {
+    public void execute(JSONObject message) {
 
     }
 }
