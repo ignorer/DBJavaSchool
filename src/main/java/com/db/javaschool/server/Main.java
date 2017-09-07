@@ -16,13 +16,10 @@ public class Main {
 
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            context.add(clientSocket);
-
-
             new Thread(() -> {
                 try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());) {
                         while (true) {
-                            handler.handle(inputStream.readUTF());
+                            handler.handle(inputStream.readUTF(), clientSocket);
                         }
                 } catch (EOFException e) {
                 } catch (IOException e) {

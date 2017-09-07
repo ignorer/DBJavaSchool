@@ -1,26 +1,28 @@
 package com.db.javaschool.server;
 
+import javafx.util.Pair;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Context {
-    private List<Socket> connections = new ArrayList<>();
+    private Map<String, Socket> connections = new HashMap<>();
     public MessagePool pool;
 
     Context(MessagePool pool) {
         this.pool = pool;
     }
 
-    public void add(Socket socket) {
-        connections.add(socket);
+    public void add(String token, Socket socket) {
+        connections.put(token, socket);
     }
 
     public void sendAll(String input) {
-        connections.forEach(c -> {
-            try (DataOutputStream outputStream = new DataOutputStream(c.getOutputStream())) {
+        connections.forEach((k, v) -> {
+            try (DataOutputStream outputStream = new DataOutputStream(v.getOutputStream())) {
                 outputStream.writeUTF(input);
             } catch (IOException e) {
                 e.printStackTrace();
