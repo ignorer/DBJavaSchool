@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-public class OutputClienTest {
+public class OutputClientTest {
 
     @Test
     public void shouldParseSimpleJSONmessage() throws IOException {
@@ -20,7 +20,7 @@ public class OutputClienTest {
 
         BufferedReader bufferedReader = mock(BufferedReader.class);
         when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject)).thenReturn(null);
-        //when(bufferedReader.readLine()).thenReturn(null);
+//        when(bufferedReader.readLine()).thenReturn(null);
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);
@@ -37,8 +37,8 @@ public class OutputClienTest {
         jsonObject.put("message", "Hello\nThere");
 
         BufferedReader bufferedReader = mock(BufferedReader.class);
-        when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject));
-        when(bufferedReader.readLine()).thenReturn(null);
+        when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject)).thenReturn(null);
+//        when(bufferedReader.readLine()).thenReturn(null);
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);
@@ -56,8 +56,8 @@ public class OutputClienTest {
         jsonObject.put("messages", list);
 
         BufferedReader bufferedReader = mock(BufferedReader.class);
-        when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject));
-        when(bufferedReader.readLine()).thenReturn(null);
+        when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject)).thenReturn(null);
+//        when(bufferedReader.readLine()).thenReturn(null);
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);

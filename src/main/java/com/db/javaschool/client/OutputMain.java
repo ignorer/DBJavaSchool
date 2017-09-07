@@ -9,7 +9,7 @@ import java.net.Socket;
 
 public class OutputMain {
     private String HOSTNAME = "127.0.0.1";
-    private int PORT = 6666;
+    private int PORT = 6667;
 
     public OutputMain() {
     }
@@ -31,18 +31,31 @@ public class OutputMain {
         String inputStr;
         while ((inputStr = bufferedReader.readLine()) != null) {
             JSONObject json = new JSONObject(inputStr);
+
+            if (!json.has("type")) {
+                System.out.println("No type key in json message");
+                return;
+            }
             String jsonMessageType = (String) json.get("type");
 
             if ("msg".equals(jsonMessageType) ) {
+                if (!json.has("message")) {
+                    System.out.println("No message");
+                    return;
+                }
                 String message = (String) json.get("message");
-                String token = (String) json.get("token");
                 outputMessage(message);
-            } else if ("hist_info".equals(jsonMessageType)) {
 
+            } else if ("hist_info".equals(jsonMessageType)) {
+                // TO DO
             } else if ("hist".equals(jsonMessageType)) {
+                if (json.has("messages")) {
+                      String messages = (String) json.get("messages");
+                }
+
 
             } else if ("error".equals(jsonMessageType)) {
-
+                // TO DO
             } else {
                 throw new RuntimeException("Unknown message type");
             }
