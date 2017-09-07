@@ -25,9 +25,10 @@ public class ServerTest {
     @Test
     public void shouldDumpToFileWhenPoolIsGoingToOverflow() {
         MessagePool spy = spy(new MessagePool());
+        Message mockedMessage = mock(Message.class);
 
         for (int i = 0; i < CRITICAL_MESSAGE_COUNT; i++) {
-            spy.addMessage(i + "");
+            spy.addMessage(mockedMessage);
         }
 
         verify(spy).dumpToFile();
@@ -63,5 +64,18 @@ public class ServerTest {
         pool.dumpToFile();
 
         assertTrue(new File("target", "0test.txt").exists());
+    }
+
+    @Test
+    public void test() {
+        MessagePool messagePool = new MessagePool();
+        messagePool.addMessage(new Message(111, "imbananko", "привет!"));
+        messagePool.addMessage(new Message(112, "imbananko1", "привет!123"));
+        messagePool.addMessage(new Message(113, "imbananko12", "привет12313!"));
+
+        String test = messagePool.toJsonString();
+
+
+
     }
 }
