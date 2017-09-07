@@ -10,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Context context = new Context(new MessagePool());
-        ServerSocket serverSocket = new ServerSocket(6667);
+        ServerSocket serverSocket = new ServerSocket(6666);
         ProtocolHandler handler = new ProtocolHandler(context);
 
 
