@@ -34,6 +34,6 @@ public class ProtocolHandler {
                 return;
         }
 
-        command.execute();
+        command.execute((String) jsonInput.get("msg"));
     }
 }

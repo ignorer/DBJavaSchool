@@ -8,7 +8,7 @@ public class HistoryCommand extends ServerCommand{
     }
 
     @Override
-    public void execute() {
+    public void execute(String message) {
 
     }
 }
