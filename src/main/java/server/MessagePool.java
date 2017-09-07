@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessagePool {
+    private int chunkCounter = 0;
     public final List<String> pool = new ArrayList<>(1000);
 
     public void addMessage(String message) {
@@ -39,6 +40,7 @@ public class MessagePool {
                     }
                 });
             }
+            chunkCounter++;
         } catch (IOException e) {
             e.printStackTrace();
         }

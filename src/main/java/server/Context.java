@@ -8,6 +8,11 @@ import java.util.List;
 
 public class Context {
     private List<Socket> connections = new ArrayList<>();
+    public MessagePool pool;
+
+    Context(MessagePool pool) {
+        this.pool = pool;
+    }
 
     public void add(Socket socket) {
         connections.add(socket);
