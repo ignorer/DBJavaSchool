@@ -16,8 +16,8 @@ public class Message {
 
     public Message(JSONObject jsonObject) {
         this.timeStamp = (long) jsonObject.get("timeStamp");
-        this.userName = (String) jsonObject.get("userName");
-        this.message = (String) jsonObject.get("message");
+//        this.userName = (String) jsonObject.get("userName");
+        this.message = (String) jsonObject.get("msg");
     }
 
     public long getTimeStamp() {
