@@ -1,5 +1,6 @@
 package com.db.javaschool.client;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -41,5 +42,14 @@ public class InputMain {
                 return;
             }
         }
+    }
+
+    /**
+     * Parse command into command name and arguments
+     * @param input User input.
+     * @return Array of strings where first element is command name and the others are arguments.
+     */
+    private static @NotNull String[] parseCommand(String input) {
+        return new String[]{""};
     }
 }

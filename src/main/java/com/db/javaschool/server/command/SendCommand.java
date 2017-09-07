@@ -10,7 +10,7 @@ public class SendCommand extends ServerCommand {
 
     @Override
     public void execute(JSONObject message) {
-        context.pool.addMessage(message.get("msg").toString());
+        context.pool.addMessage(message);
         context.sendAll(message.get("msg").toString());
     }
 }
