@@ -7,7 +7,12 @@ import server.command.SendCommand;
 import server.command.ServerCommand;
 
 public class ProtocolHandler {
-    static public void handle(String stringInput) {
+    private Context context;
+    ProtocolHandler(Context context) {
+        this.context = context;
+    }
+
+    public void handle(String stringInput) {
         JSONObject jsonInput = new JSONObject(stringInput);
         String commandType = (String) jsonInput.get("type");
         //parse json
@@ -16,13 +21,13 @@ public class ProtocolHandler {
 
         switch (commandType) {
             case "hist_info":
-                command = new HistoryInfoCommand();
+                command = new HistoryInfoCommand(context);
                 break;
             case "hist":
-                command = new HistoryCommand();
+                command = new HistoryCommand(context);
                 break;
             case "send":
-                command = new SendCommand();
+                command = new SendCommand(context);
                 break;
             default:
                 System.out.println("Unsupported command: " + commandType);

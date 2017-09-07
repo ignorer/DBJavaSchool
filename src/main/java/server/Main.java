@@ -14,16 +14,18 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Context context = new Context();
         ServerSocket serverSocket = new ServerSocket(6667);
+        ProtocolHandler handler = new ProtocolHandler(context);
+
 
         while (true) {
             Socket clientSocket = serverSocket.accept();
             context.add(clientSocket);
 
+
             new Thread(() -> {
-                try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
-                     DataOutputStream outputStream = new DataOutputStream(clientSocket.getOutputStream())) {
+                try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());) {
                         while (true) {
-                            ProtocolHandler.handle(inputStream.readUTF());
+                            handler.handle(inputStream.readUTF());
                         }
                 } catch (EOFException e) {
                 } catch (IOException e) {
