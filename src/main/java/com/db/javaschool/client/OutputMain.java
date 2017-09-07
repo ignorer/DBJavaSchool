@@ -53,7 +53,6 @@ public class OutputMain {
                       String messages = (String) json.get("messages");
                 }
 
-
             } else if ("error".equals(jsonMessageType)) {
                 // TO DO
             } else {
