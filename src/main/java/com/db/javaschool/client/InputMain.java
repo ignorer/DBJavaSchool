@@ -1,12 +1,18 @@
 package com.db.javaschool.client;
 
+import com.db.javaschool.protocol.request.HistoryInfoRequest;
+import com.db.javaschool.protocol.request.HistoryRequest;
+import com.db.javaschool.protocol.request.Request;
+import com.db.javaschool.protocol.request.SendRequest;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class InputMain {
     public static void main(String[] args) {
@@ -20,23 +26,17 @@ public class InputMain {
                 DataOutputStream stream = new DataOutputStream(socket.getOutputStream())) {
                 while (true) {
                     String s = scanner.nextLine();
-                    if (s.equals("exit")) {
+                    if (s.equals("/exit")) {
                         return;
                     }
 
-                    int firstSpace = s.indexOf(' ');
-                    JSONObject json = new JSONObject();
-                    json.put("type", s.substring(1, firstSpace));
-                    json.put("token", args[0]);
-                    if (s.startsWith("/snd")) {
-                        json.put("msg", s.substring(firstSpace + 1));
-                    } else if (s.startsWith("/hist")) {
-                        json.put("pageNumber", s.substring(firstSpace + 1));
-                    } else if (s.startsWith("/hist_info")) {
-                    } else {
-                        continue;
+                    try {
+                        String[] tokens = parseCommand(s);
+                        Request request = buildRequest(tokens, args[0]);
+                        stream.writeUTF(request.toString());
+                    } catch (IllegalArgumentException e) {
+                        // ignore it
                     }
-                    stream.writeUTF(json.toString());
                 }
             } catch (IOException e) {
                 return;
@@ -49,7 +49,45 @@ public class InputMain {
      * @param input User input.
      * @return Array of strings where first element is command name and the others are arguments.
      */
-    private static @NotNull String[] parseCommand(String input) {
-        return new String[]{""};
+    private static @NotNull String[] parseCommand(@NotNull String input) {
+        if (!input.startsWith("/")) {
+            throw new IllegalArgumentException("invalid format");
+        }
+        input = input.substring(1, input.length());
+
+        int firstSpace = input.indexOf(' ');
+        if (firstSpace == -1) {
+            return new String[] {input};
+        }
+        String commandName = input.substring(0, firstSpace);
+        switch (commandName) {
+            case "snd":
+                return new String[]{commandName, input.substring(firstSpace + 1, input.length())};
+            case "hist_info":
+                return new String[]{commandName};
+            case "hist":
+                List<String> tokens = Arrays.stream(input.substring(firstSpace + 1, input.length()).split(" "))
+                    .filter(token -> !token.equals(""))
+                    .collect(Collectors.toList());
+                if (tokens.size() != 1) {
+                    throw new IllegalArgumentException("invalid number of arguments");
+                }
+                return new String[]{commandName, tokens.get(0)};
+            default:
+                throw new IllegalArgumentException("unknown command");
+        }
+    }
+
+    private static @NotNull Request buildRequest(String[] tokens, String authToken) {
+        switch (tokens[0]) {
+            case "snd":
+                return new SendRequest(tokens[1], authToken);
+            case "hist_info":
+                return new HistoryInfoRequest(authToken);
+            case "hist":
+                return new HistoryRequest(authToken, Integer.parseInt(tokens[1]));
+            default:
+                throw new IllegalArgumentException("invalid command name");
+        }
     }
 }

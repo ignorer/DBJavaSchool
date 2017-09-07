@@ -1,9 +1,7 @@
 package com.db.javaschool.server;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -14,24 +12,23 @@ public class MessagePool {
     private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 
     public void addMessage(Message message) {
-        rwl.writeLock().lock();
-        if (pool.size() >= 950) {
-            dumpToFile();
-            pool.clear();
-        }
+        lock.writeLock().lock();
         pool.add(message);
-        rwl.writeLock().unlock();
+        if (pool.size() == 1000) {
+
+        }
+        lock.writeLock().unlock();
     }
 
     public void addMessage(JSONObject message) {
 
-        rwl.writeLock().lock();
+        lock.writeLock().lock();
         if (pool.size() >= 950) {
             dumpToFile();
             pool.clear();
         }
         pool.add(new Message(message));
-        rwl.writeLock().unlock();
+        lock.writeLock().unlock();
     }
 
 
@@ -39,9 +36,9 @@ public class MessagePool {
     public JSONObject getMessageChunk() {
         JSONObject answer;
 
-        rwl.readLock().lock();
+        lock.readLock().lock();
             answer = new JSONObject(pool);
-        rwl.readLock().unlock();
+        lock.readLock().unlock();
 
         return answer;
     }

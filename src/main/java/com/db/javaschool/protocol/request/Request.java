@@ -1,4 +1,4 @@
 package com.db.javaschool.protocol.request;
 
-interface Request {
+public interface Request {
 }
