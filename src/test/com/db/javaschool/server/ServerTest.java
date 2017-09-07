@@ -1,4 +1,4 @@
-package java.server;
+package com.db.javaschool.server;
 
 import org.junit.Before;
 import org.junit.Test;
