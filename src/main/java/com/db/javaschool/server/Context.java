@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class Context {
     private Map<String, Socket> connections = new HashMap<>();
+    public Map<String, Socket> getConnections() {
+        return connections;
+    }
+
     public MessagePool pool;
 
     Context(MessagePool pool) {
