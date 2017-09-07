@@ -3,7 +3,6 @@ package com.db.javaschool.server;
 import org.json.JSONObject;
 
 public class Message {
-
     private long timeStamp;
     private String userName;
     private String message;
