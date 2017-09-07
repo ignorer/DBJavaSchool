@@ -19,8 +19,8 @@ public class OutputClienTest {
         jsonObject.put("message", "Hello");
 
         BufferedReader bufferedReader = mock(BufferedReader.class);
-        when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject));
-        when(bufferedReader.readLine()).thenReturn(null);
+        when(bufferedReader.readLine()).thenReturn(String.valueOf(jsonObject)).thenReturn(null);
+        //when(bufferedReader.readLine()).thenReturn(null);
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);

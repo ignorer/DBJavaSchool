@@ -1,10 +1,8 @@
 package com.db.javaschool.server;
 
-import com.db.javaschool.server.Context;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import com.db.javaschool.server.MessagePool;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +15,11 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class ServerTest {
-    private static final int CRITICAL_MESSAGE_COUNT = 1000;
+    private static final int OVERFLOW_MESSAGE_COUNT = 1000;
 
     @Before
     public void setUp() {
+
     }
 
     @Test
@@ -28,14 +27,14 @@ public class ServerTest {
         MessagePool spy = spy(new MessagePool());
         Message mockedMessage = mock(Message.class);
 
-        for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 10; i++) {
+        for (int i = 0; i < OVERFLOW_MESSAGE_COUNT + 10; i++) {
             spy.addMessage(mockedMessage);
         }
 
         verify(spy).dumpToFile();
     }
 
-    @Test  @Ignore
+    @Test @Ignore
     public void shouldOpenOutputStreamWhenContextSendAll() throws IOException {
         Context mockedContext = new Context(new MessagePool());
         Socket spySocket = spy(new Socket());
@@ -56,7 +55,7 @@ public class ServerTest {
         assertTrue(context.getConnections().containsKey("Test"));
     }
 
-    @Test @Ignore
+    @Test
     public void shouldCreateFileWhenMessagePoolDump() {
         MessagePool pool = new MessagePool();
         File file = new File("target", "0test.txt");
@@ -74,9 +73,9 @@ public class ServerTest {
         messagePool.addMessage(new Message(112, "imbananko1", "привет!123"));
         messagePool.addMessage(new Message(113, "imbananko12", "привет12313!"));
 
-        String test = messagePool.toJsonString();
+        String test = messagePool.toJson().toString();
         FileHandler file = new FileHandler("target");
-        file.dumpFile(messagePool.pool);
+        file.dumpFile(messagePool.toJson());
 
     }
 }
