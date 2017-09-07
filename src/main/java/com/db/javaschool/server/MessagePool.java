@@ -13,6 +13,7 @@ public class MessagePool {
     public void addMessage(String message) {
         if (pool.size() >= 950) {
             dumpToFile();
+            pool.clear();
         }
         synchronized (pool) {
             pool.add(message);
@@ -28,7 +29,7 @@ public class MessagePool {
     }
 
     public void dumpToFile() {
-        File file = new File("target", "test.txt");
+        File file = new File("target", "test.txt" + chunkCounter);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             synchronized (pool) {

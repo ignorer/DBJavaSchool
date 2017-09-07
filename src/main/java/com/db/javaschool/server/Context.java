@@ -1,7 +1,5 @@
 package com.db.javaschool.server;
 
-import javafx.util.Pair;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
