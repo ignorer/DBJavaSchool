@@ -1,4 +1,4 @@
-package java.client;
+package com.db.javaschool.client;
 
 import org.junit.Test;
 
