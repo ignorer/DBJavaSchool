@@ -10,6 +10,9 @@ public class MessagePool {
     public final List<String> pool = new ArrayList<>(1000);
 
     public void addMessage(String message) {
+        if (pool.size() >= 950) {
+            dumpToFile();
+        }
         synchronized (pool) {
             pool.add(message);
         }
@@ -27,14 +30,15 @@ public class MessagePool {
         File file = new File("target", "test.txt");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
-            pool.forEach(m -> {
-                try {
-                    bw.write(m);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
+            synchronized (pool) {
+                pool.forEach(m -> {
+                    try {
+                        bw.write(m);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
