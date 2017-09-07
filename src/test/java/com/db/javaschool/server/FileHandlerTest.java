@@ -20,9 +20,10 @@ public class FileHandlerTest {
 
     @Before
     public void setUp() {
-        folderPath = "target/test";
+        folderPath = "test";
+        new File("test").mkdir();
         fileHandler = new FileHandler(folderPath);
-        new File("target/test").mkdir();
+
     }
 
     @Test
