@@ -48,10 +48,10 @@
                 <version>1.2.0</version>
                 <configuration>
                     <targetClasses>
-                        <param>com.acme.edu*</param>
+                        <param>com.db.javaschool.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>com.acme.edu*</param>
+                        <param>com.db.javaschool*</param>
                     </targetTests>
                     <mutators>
                         <mutator>ALL</mutator>
