@@ -29,7 +29,7 @@ public class MessagePool {
     }
 
     public void dumpToFile() {
-        File file = new File("target", "test.txt" + chunkCounter);
+        File file = new File("target", chunkCounter + "test.txt");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(file, true))) {
             synchronized (pool) {

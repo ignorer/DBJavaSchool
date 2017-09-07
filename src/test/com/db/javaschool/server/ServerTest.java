@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import com.db.javaschool.server.MessagePool;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -48,6 +49,18 @@ public class ServerTest {
         Context context = new Context(new MessagePool());
 
         context.add("Test", new Socket());
+
+        assertEquals(1, context.getConnections().size());
+        assertTrue(context.getConnections().containsKey("Test"));
+    }
+
+    @Test
+    public void shouldCreateFileWhenMessagePoolDump() {
+        MessagePool pool = new MessagePool();
+        File file = new File("c:\\logfile20100131.log");
+        file.delete();
+
+        pool.dumpToFile();
 
         assertEquals(1, context.getConnections().size());
         assertTrue(context.getConnections().containsKey("Test"));
