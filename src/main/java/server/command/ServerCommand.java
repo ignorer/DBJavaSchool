@@ -1,5 +1,12 @@
 package server.command;
 
-public interface ServerCommand {
-    void execute();
+import server.Context;
+
+public abstract class ServerCommand {
+    private Context context;
+    public abstract void execute();
+
+    public ServerCommand(Context context) {
+        this.context = context;
+    }
 }

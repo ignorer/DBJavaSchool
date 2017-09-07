@@ -1,8 +1,15 @@
 package server.command;
 
-public class SendCommand implements ServerCommand{
+import server.Context;
+
+public class SendCommand extends ServerCommand {
+    public SendCommand(Context context) {
+        super(context);
+    }
+
     @Override
     public void execute() {
+
 
     }
 }

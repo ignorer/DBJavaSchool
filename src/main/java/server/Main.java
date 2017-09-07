@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    static private List<Socket> connections = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
+        Context context = new Context();
         ServerSocket serverSocket = new ServerSocket(6667);
+
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            connections.add(clientSocket);
+            context.add(clientSocket);
 
             new Thread(() -> {
                 try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());
