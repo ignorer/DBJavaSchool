@@ -16,17 +16,17 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class ServerTest {
+    private static final int CRITICAL_MESSAGE_COUNT = 1000;
 
     @Before
     public void setUp() {
-
     }
 
     @Test
     public void shouldDumpToFileWhenPoolIsGoingToOverflow() {
         MessagePool spy = spy(new MessagePool());
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < CRITICAL_MESSAGE_COUNT; i++) {
             spy.addMessage(i + "");
         }
 
@@ -57,10 +57,11 @@ public class ServerTest {
     @Test
     public void shouldCreateFileWhenMessagePoolDump() {
         MessagePool pool = new MessagePool();
-        File file = new File("0test.txt");
+        File file = new File("target", "0test.txt");
         file.delete();
 
         pool.dumpToFile();
 
+        assertTrue(new File("target", "0test.txt").exists());
     }
 }
