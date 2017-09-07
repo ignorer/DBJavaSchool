@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class ServerTest {
@@ -17,9 +18,10 @@ public class ServerTest {
     public void setUp() {
 
     }
+
     @Test
     public void shouldDumpToFileWhenPoolIsGoingToOverflow() {
-        MessagePool spy = Mockito.spy(new MessagePool());
+        MessagePool spy = spy(new MessagePool());
 
         for (int i = 0; i < 1000; i++) {
             spy.addMessage(i + "");
@@ -29,17 +31,13 @@ public class ServerTest {
     }
 
     @Test
-    public void test() throws IOException {
-        Context mockedContext = mock(Context.class);
-        Socket mockedSocket = mock(Socket.class);
+    public void openOutputStreamWhenContextSendAll() throws IOException {
+        Context mockedContext = new Context(new MessagePool());
+        Socket spySocket = spy(new Socket());
 
-
-        mockedContext.add("test", mockedSocket);
+        mockedContext.add("test", spySocket);
         mockedContext.sendAll("message");
 
-
-        verify(mockedSocket).getOutputStream();
-
-
+        verify(spySocket).getOutputStream();
     }
 }
