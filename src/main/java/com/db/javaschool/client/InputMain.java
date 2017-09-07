@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
@@ -22,30 +23,31 @@ public class InputMain {
         }
 
         try (Scanner scanner = new Scanner(System.in)) {
-            try (Socket socket = new Socket("127.0.0.1", 6666);
-                DataOutputStream stream = new DataOutputStream(socket.getOutputStream())) {
-                while (true) {
-                    String s = scanner.nextLine();
-                    if (s.equals("/exit")) {
-                        return;
-                    }
-
-                    try {
-                        String[] tokens = parseCommand(s);
-                        Request request = buildRequest(tokens, args[0]);
-                        stream.writeUTF(request.toString());
-                    } catch (IllegalArgumentException e) {
-                        // ignore it
-                    }
+            Socket socket = new Socket("127.0.0.1", 6666);
+            OutputStream out = socket.getOutputStream();
+            DataOutputStream stream = new DataOutputStream(out);
+            while (true) {
+                String s = scanner.nextLine();
+                if (s.equals("/exit")) {
+                    return;
                 }
-            } catch (IOException e) {
-                return;
+
+                try {
+                    String[] tokens = parseCommand(s);
+                    Request request = buildRequest(tokens, args[0]);
+//                        stream.writeUTF(request.toString());
+                } catch (IllegalArgumentException e) {
+                    // ignore it
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
      * Parse command into command name and arguments
+     *
      * @param input User input.
      * @return Array of strings where first element is command name and the others are arguments.
      */
@@ -57,7 +59,7 @@ public class InputMain {
 
         int firstSpace = input.indexOf(' ');
         if (firstSpace == -1) {
-            return new String[] {input};
+            return new String[]{input};
         }
         String commandName = input.substring(0, firstSpace);
         switch (commandName) {
