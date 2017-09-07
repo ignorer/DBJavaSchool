@@ -3,7 +3,7 @@ package java.server;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import server.MessagePool;
+import com.db.javaschool.server.MessagePool;
 
 import static org.mockito.Mockito.verify;
 

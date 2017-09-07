@@ -1,10 +1,10 @@
-package server;
+package com.db.javaschool.server;
 
 import org.json.JSONObject;
-import server.command.HistoryCommand;
-import server.command.HistoryInfoCommand;
-import server.command.SendCommand;
-import server.command.ServerCommand;
+import com.db.javaschool.server.command.HistoryCommand;
+import com.db.javaschool.server.command.HistoryInfoCommand;
+import com.db.javaschool.server.command.SendCommand;
+import com.db.javaschool.server.command.ServerCommand;
 
 public class ProtocolHandler {
     private Context context;

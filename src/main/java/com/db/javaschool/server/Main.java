@@ -1,4 +1,4 @@
-package server;
+package com.db.javaschool.server;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

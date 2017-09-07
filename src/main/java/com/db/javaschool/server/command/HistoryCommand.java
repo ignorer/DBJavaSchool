@@ -1,6 +1,6 @@
-package server.command;
+package com.db.javaschool.server.command;
 
-import server.Context;
+import com.db.javaschool.server.Context;
 
 public class HistoryCommand extends ServerCommand{
     public HistoryCommand(Context context) {

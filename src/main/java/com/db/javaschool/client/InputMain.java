@@ -1,4 +1,4 @@
-package client;
+package com.db.javaschool.client;
 
 import org.json.JSONObject;
 
