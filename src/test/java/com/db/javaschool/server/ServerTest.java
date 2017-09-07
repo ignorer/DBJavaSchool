@@ -74,8 +74,8 @@ public class ServerTest {
         messagePool.addMessage(new Message(113, "imbananko12", "привет12313!"));
 
         String test = messagePool.toJsonString();
-
-
+        FileHandler file = new FileHandler("target");
+        file.dumpFile(messagePool.pool);
 
     }
 }

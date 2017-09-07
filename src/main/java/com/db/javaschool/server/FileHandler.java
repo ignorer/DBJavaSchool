@@ -19,7 +19,7 @@ public class FileHandler {
         fileNumber = new File(folder).listFiles().length;
     }
 
-    public void dumpFile(List<String> messages) {
+    public void dumpFile(List<Message> messages) {
         File file = new File(folder, fileNumber + "_chatek.txt");
 
         try {
