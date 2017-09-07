@@ -9,13 +9,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class MessagePool {
     private volatile int chunkCounter = 0;
     public final List<Message> pool = new ArrayList<>(1000);
-    private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     public void addMessage(Message message) {
         lock.writeLock().lock();
         pool.add(message);
         if (pool.size() == 1000) {
-
+            dumpToFile();
         }
         lock.writeLock().unlock();
     }

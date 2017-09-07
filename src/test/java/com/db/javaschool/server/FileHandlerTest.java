@@ -30,6 +30,7 @@ public class FileHandlerTest {
         fileHandler.dumpFile(new JSONObject());
 
         assertTrue(new File(folderPath + "/1_chatek.txt").exists());
+        assertEquals(1, fileHandler.getFileNumber());
     }
 
     @Test
@@ -44,7 +45,6 @@ public class FileHandlerTest {
 
         assertEquals(expectedString, jsonObject.getString("expected"));
     }
-
 
     @After
     public void cleanUp() {
