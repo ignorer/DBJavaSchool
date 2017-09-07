@@ -1,4 +1,4 @@
-package client;
+package java.client;
 
 public class ClientTest {
 }
