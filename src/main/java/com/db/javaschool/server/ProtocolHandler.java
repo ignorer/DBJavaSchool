@@ -19,6 +19,7 @@ public class ProtocolHandler {
      */
     public void handle(String stringInput, Socket socket) {
         JSONObject jsonInput = new JSONObject(stringInput);
+        jsonInput.put("timeStamp", System.currentTimeMillis());
         String commandType = (String) jsonInput.get("type");
         context.add((String) jsonInput.get("token"), socket);
         //parse json
