@@ -57,12 +57,10 @@ public class ServerTest {
     @Test
     public void shouldCreateFileWhenMessagePoolDump() {
         MessagePool pool = new MessagePool();
-        File file = new File("c:\\logfile20100131.log");
+        File file = new File("0test.txt");
         file.delete();
 
         pool.dumpToFile();
 
-        assertEquals(1, context.getConnections().size());
-        assertTrue(context.getConnections().containsKey("Test"));
     }
 }
