@@ -54,28 +54,4 @@ public class ServerTest {
         assertEquals(1, context.getConnections().size());
         assertTrue(context.getConnections().containsKey("Test"));
     }
-
-    @Test
-    public void shouldCreateFileWhenMessagePoolDump() {
-        MessagePool pool = new MessagePool();
-        File file = new File("target", "0test.txt");
-        file.delete();
-
-        pool.dumpToFile();
-
-        assertTrue(new File("target", "0test.txt").exists());
-    }
-
-    @Test
-    public void test() {
-        MessagePool messagePool = new MessagePool();
-        messagePool.addMessage(new Message(111, "imbananko", "привет!"));
-        messagePool.addMessage(new Message(112, "imbananko1", "привет!123"));
-        messagePool.addMessage(new Message(113, "imbananko12", "привет12313!"));
-
-        String test = messagePool.toJson().toString();
-        FileHandler file = new FileHandler("target");
-        file.dumpFile(messagePool.toJson());
-
-    }
 }
