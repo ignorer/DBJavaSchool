@@ -1,6 +1,7 @@
 package com.db.javaschool.server.command;
 
 import com.db.javaschool.server.Context;
+import org.json.JSONObject;
 
 public class SendCommand extends ServerCommand {
     public SendCommand(Context context) {
@@ -8,8 +9,8 @@ public class SendCommand extends ServerCommand {
     }
 
     @Override
-    public void execute(String message) {
-        context.pool.addMessage(message);
-        context.sendAll(message);
+    public void execute(JSONObject message) {
+        context.pool.addMessage(message.get("msg").toString());
+        context.sendAll(message.get("msg").toString());
     }
 }

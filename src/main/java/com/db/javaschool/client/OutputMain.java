@@ -32,8 +32,8 @@ public class OutputMain {
             }
             JSONObject json = new JSONObject(responseStrBuilder.toString());
             String jsonMessageType = (String) json.get("type");
-            if (json.get("type") == null ) {
-                System.out.println();
+            if (json.get("type") == "snd" ) {
+                System.out.println(json.get("msg"));
             }
 
         }

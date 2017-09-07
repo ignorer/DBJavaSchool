@@ -1,4 +1,5 @@
 package com.db.javaschool.server;
+import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,7 +26,10 @@ public class Context {
     public void sendAll(String input) {
         connections.forEach((k, v) -> {
             try (DataOutputStream outputStream = new DataOutputStream(v.getOutputStream())) {
-                outputStream.writeUTF(input);
+                JSONObject json = new JSONObject();
+                json.put("type", "snd");
+                json.put("msg", input);
+                outputStream.writeUTF(json.toString());
             } catch (IOException e) {
                 e.printStackTrace();
             }
