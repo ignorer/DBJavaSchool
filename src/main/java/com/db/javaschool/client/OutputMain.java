@@ -35,10 +35,6 @@ public class OutputMain {
             if (json.get("type") == "snd" ) {
                 System.out.println(json.get("msg"));
             }
-
         }
-
     }
-
-
 }

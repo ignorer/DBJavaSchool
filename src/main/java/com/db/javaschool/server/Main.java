@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -19,20 +21,22 @@ public class Main {
         ServerSocket serverSocket = new ServerSocket(6666);
         ProtocolHandler handler = new ProtocolHandler(context);
 
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            new Thread(() -> {
+            executorService.submit(() -> {
                 try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());) {
-                        while (true) {
-                            handler.handle(inputStream.readUTF(), clientSocket);
-                        }
+                    while (true) {
+                        handler.handle(inputStream.readUTF(), clientSocket);
+                    }
                 } catch (EOFException e) {
                 } catch (SocketException e) {
                 } catch (IOException e) {
+                    executorService.shutdownNow();
                     e.printStackTrace();
                 }
-            }).start();
+            });
         }
     }
 }
