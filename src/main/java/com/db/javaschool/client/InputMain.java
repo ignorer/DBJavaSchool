@@ -16,30 +16,27 @@ public class InputMain {
         }
 
         try (Scanner scanner = new Scanner(System.in)) {
-            try {
-                Socket socket = new Socket("127.0.0.1", 6666);
-                OutputStream outputStream = socket.getOutputStream();
-                DataOutputStream out = new DataOutputStream(outputStream);
-
+            try (Socket socket = new Socket("127.0.0.1", 6667);
+                DataOutputStream stream = new DataOutputStream(socket.getOutputStream())) {
                 while (true) {
-                    String s = scanner.next();
+                    String s = scanner.nextLine();
                     if (s.equals("exit")) {
                         return;
                     }
 
                     int firstSpace = s.indexOf(' ');
                     JSONObject json = new JSONObject();
-                    json.put("type", s.substring(0, firstSpace));
+                    json.put("type", s.substring(1, firstSpace));
                     json.put("token", args[0]);
                     if (s.startsWith("/snd")) {
                         json.put("msg", s.substring(firstSpace + 1));
                     } else if (s.startsWith("/hist")) {
-                            json.put("pageNumber", s.substring(firstSpace + 1));
+                        json.put("pageNumber", s.substring(firstSpace + 1));
                     } else if (s.startsWith("/hist_info")) {
                     } else {
                         continue;
                     }
-                    out.writeUTF(json.toString());
+                    stream.writeUTF(json.toString());
                 }
             } catch (IOException e) {
                 return;
