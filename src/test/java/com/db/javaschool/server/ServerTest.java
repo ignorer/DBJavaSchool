@@ -28,7 +28,7 @@ public class ServerTest {
         MessagePool spy = spy(new MessagePool());
         Message mockedMessage = mock(Message.class);
 
-        for (int i = 0; i < CRITICAL_MESSAGE_COUNT; i++) {
+        for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 10; i++) {
             spy.addMessage(mockedMessage);
         }
 

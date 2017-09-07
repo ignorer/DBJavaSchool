@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class MessagePool {
     private volatile int chunkCounter = 0;
     public final List<Message> pool = new ArrayList<>(1000);
-    final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
 
     public void addMessage(Message message) {
         rwl.writeLock().lock();
@@ -49,10 +49,6 @@ public class MessagePool {
     public void dumpToFile() {
         FileHandler fileHandler = new FileHandler("target");
         fileHandler.dumpFile(toJson());
-    }
-
-    public String toJsonString() {
-        return new JSONObject().put("history", pool).toString();
     }
 
     public JSONObject toJson() {
