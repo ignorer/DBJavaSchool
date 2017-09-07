@@ -9,6 +9,7 @@ public class SendCommand extends ServerCommand {
 
     @Override
     public void execute(String message) {
+        context.pool.addMessage(message);
         context.sendAll(message);
     }
 }
