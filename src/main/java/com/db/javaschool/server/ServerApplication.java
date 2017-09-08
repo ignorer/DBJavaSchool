@@ -2,17 +2,17 @@ package com.db.javaschool.server;
 
 import com.db.javaschool.protocol.request.Request;
 import com.db.javaschool.server.command.*;
+import com.db.javaschool.server.entity.Message;
+import com.db.javaschool.server.entity.User;
 import com.db.javaschool.server.exception.RequestParsingException;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerApplication {
@@ -20,11 +20,13 @@ public class ServerApplication {
     private final Thread inputThread = new Thread(this::inputThreadLifecycle);
     private final Thread outputThread = new Thread(this::outputThreadLifecycle);
     private final int port;
-    private final Context context = new Context(new MessagePool());
+    private final Context context;
     private final Map<Request.RequestType, ServerCommand> commands;
     private final Object systemErrMonitor = new Object();
 
-    public ServerApplication(int port) {
+    public ServerApplication(int port) throws IOException {
+        context = new Context();
+
         this.port = port;
 
         Map<Request.RequestType, ServerCommand> tempMap = new HashMap<>();
@@ -35,14 +37,16 @@ public class ServerApplication {
         commands = Collections.unmodifiableMap(tempMap);
     }
 
-    public void run(int requestPort) {
+    public void run() {
         Scanner scanner = new Scanner(System.in);
 
         // TODO: add scanning working directory for files
 
         while (!timeToExit.get()) {
             String input = scanner.next();
-            if (input.equals("stop"));
+            if (input.equals("stop")) {
+                timeToExit.set(true);
+            }
         }
     }
 
@@ -82,13 +86,23 @@ public class ServerApplication {
     private void outputThreadLifecycle() {
         while (!timeToExit.get()) {
             try {
-                Thread.sleep(50);
+                Message message = context.getPool().getMessage();
 
-            } catch (InterruptedException e) {
+                Collection<User> connections = context.lockConnections();
+                connections.forEach(user -> {
+                    try {
+                        DataOutputStream out = new DataOutputStream(user.getSocket().getOutputStream());
+                        out.writeUTF(message.toJSON());
+                    } catch (IOException e) {
+                        // ignore it
+                    }
+                });
+            } catch (IOException e) {
                 synchronized (systemErrMonitor) {
-                    System.err.println("fatal error: sending thread has been interrupted");
+                    System.err.println("huy");
                 }
-                timeToExit.set(true);
+            } finally {
+                context.releaseConnections();
             }
         }
     }

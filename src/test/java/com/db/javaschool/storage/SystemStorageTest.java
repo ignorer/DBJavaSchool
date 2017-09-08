@@ -1,16 +1,15 @@
 package com.db.javaschool.storage;
 
+import com.db.javaschool.server.MessagePool;
 import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.storage.FileSystemStorage;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SystemStorageTest {
     @Test
-    public void test() {
+    public void test() throws IOException, InterruptedException {
         FileSystemStorage fileSystemStorage = null;
         try {
             fileSystemStorage = new FileSystemStorage("target");
@@ -18,12 +17,11 @@ public class SystemStorageTest {
             e.printStackTrace();
         }
 
-        List<Message> list = new ArrayList<>();
-        list.add(new Message(123, "user", "message"));
-        try {
-            fileSystemStorage.store(list);
-        } catch (IOException e) {
-            e.printStackTrace();
+        MessagePool pool = new MessagePool();
+
+        for (int i = 0; i < 30; i++) {
+            pool.putMessage(new Message(123, "user", "message"));
         }
+
     }
 }

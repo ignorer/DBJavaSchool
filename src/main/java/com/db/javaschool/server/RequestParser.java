@@ -11,7 +11,7 @@ public class RequestParser {
     public static Request parseRequest(String s) {
         JSONObject json = new JSONObject(s);
         if (json.getString("type") == null) {
-            throw new RequestParsingException("cannot determine type of request");
+            throw new RequestParsingException("cannot determine type of request", s);
         }
 
         try {
@@ -26,8 +26,8 @@ public class RequestParser {
                     return new ConnectRequest(json);
             }
         } catch (IllegalArgumentException e) {
-            throw new RequestParsingException("some required data is missing or has invalid format");
+            throw new RequestParsingException("some required data is missing or has invalid format", s);
         }
-        throw new RequestParsingException("unknown type");
+        throw new RequestParsingException("unknown type", s);
     }
 }
