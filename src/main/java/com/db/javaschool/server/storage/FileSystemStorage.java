@@ -13,15 +13,19 @@ import java.util.List;
 
 public class FileSystemStorage implements Storage {
     private int numberOfPages;
-    private String path;
+    private File file;
+
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
 
     public FileSystemStorage(File file) throws IOException {
-        this.path = file.getAbsolutePath();
-
+        //this.path = file.getAbsolutePath();
+        this.file = file;
         if (file.exists() && file.isDirectory()) {
             numberOfPages = file.listFiles().length;
         } else {
-            Files.createDirectory(file.toPath());
+            file.mkdir();
             numberOfPages = 0;
         }
     }
@@ -29,9 +33,10 @@ public class FileSystemStorage implements Storage {
 
     @Override
     public void store(List<Message> messageList) throws IOException {
-        File file = new File(path, numberOfPages++ + "_chatek.txt");
+        //File file = new File(path, numberOfPages++ + "_chatek.txt");
+        String path = this.file.toPath().toString() + "\\" + numberOfPages++ + "_chatek.txt";
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
             writer.write(new JSONArray(messageList).toString());
         }
     }
@@ -39,9 +44,9 @@ public class FileSystemStorage implements Storage {
     @Override
     public List<Message> getData(int fileNumber) throws IOException {
         String jsonString = "";
-        File file = new File(path, fileNumber + "_chatek.txt");
+        String path = this.file.toPath().toString() + "\\" + fileNumber + "_chatek.txt";
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 jsonString += line;
             }

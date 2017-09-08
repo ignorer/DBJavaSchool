@@ -3,38 +3,59 @@ package com.db.javaschool.storage;
 import com.db.javaschool.server.MessagePool;
 import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.storage.FileSystemStorage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class SystemStorageTest {
-    FileSystemStorage fileSystemStorage;
-    private final int CRITICAL_MESSAGE_COUNT = 20;
+    private static File file;
 
     @Before
     public void setUp() {
-        fileSystemStorage = null;
-        try {
-            fileSystemStorage = new FileSystemStorage(new File("./storage/test"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        file = new File("storage/test");
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        for (File f : file.listFiles()) {
+            f.delete();
         }
+        file.delete();
     }
 
     @Test
-    public void test() throws IOException, InterruptedException {
-        MessagePool pool = new MessagePool(fileSystemStorage);
+    public void shouldCreateEmptyFolderWhenConstructor() throws IOException, InterruptedException {
+        FileSystemStorage systemStorage = new FileSystemStorage(file);
 
-        for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 5; i++) {
-            pool.putMessageToDeque(new Message(1, "user", "message"));
-        }
+        assertTrue(file.exists());
+        assertEquals(1, systemStorage.getNumberOfPages());
+    }
 
-        for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 5; i++) {
-            pool.getMessageFromDeque();
-        }
+    @Test
+    public void shouldCorrectlyWriteAndReadToFileWhenStore() throws IOException, InterruptedException {
+        FileSystemStorage systemStorage = new FileSystemStorage(file);
+        List<Message> messagesToWrite = new ArrayList<>();
+        Message message = new Message(1, "123", "123");
+        messagesToWrite.add(message);
 
-        fileSystemStorage.getData(0);
+        systemStorage.store(messagesToWrite);
+        List<Message> messagesToRead = systemStorage.getData(0);
+
+
+        //assertTrue(file.listFiles().length == 1);
+        assertTrue(messagesToRead.size() == 1);
+        assertTrue(messagesToRead.contains(message));
+
     }
 }
