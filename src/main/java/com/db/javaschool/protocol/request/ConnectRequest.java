@@ -6,8 +6,8 @@ import org.json.JSONObject;
 import java.util.IllegalFormatException;
 
 public class ConnectRequest implements Request {
-    private String username;
-    private String token;
+    private final String username;
+    private final String token;
 
     public ConnectRequest(String username, String token) {
         this.username = username;
