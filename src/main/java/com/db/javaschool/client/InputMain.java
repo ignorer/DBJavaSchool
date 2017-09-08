@@ -31,7 +31,11 @@ public class InputMain {
             new Thread(() -> {
                 while (true) {
                     try {
-                        outputStreamToOutputConsole.writeUTF(inputStremFromServer.readUTF());
+                       String s =  inputStremFromServer.readUTF();
+                        System.out.println("Received " + s);
+                       outputStreamToOutputConsole.writeUTF(s);
+
+
                     } catch (EOFException ex) {
                         // do nothing
                     }
