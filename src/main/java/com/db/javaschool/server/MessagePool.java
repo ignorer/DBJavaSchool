@@ -22,11 +22,19 @@ public class MessagePool {
     private final List<Message> cache = new ArrayList<>();
     private final Storage storage;
 
-    public MessagePool(FileSystemStorage storage) throws IOException {
+    public BlockingDeque<Message> getMessageQueue() {
+        return messageQueue;
+    }
+
+    public List<Message> getCache() {
+        return cache;
+    }
+
+    public MessagePool(Storage storage) throws IOException {
         this.storage = storage;
     }
 
-    public void putMessage(@NotNull Message message) throws InterruptedException {
+    public void putMessageToDeque(@NotNull Message message) throws InterruptedException {
         try {
             lock.writeLock().lock();
             messageQueue.putLast(message);
@@ -35,13 +43,13 @@ public class MessagePool {
         }
     }
 
-    public Message getMessage() throws IOException {
+    public Message getMessageFromDeque() throws IOException {
         try {
             Message message;
             lock.writeLock().lock();
             try {
                 message = messageQueue.takeFirst();
-                archiveMessage(message);
+                putMessageToCache(message);
                 return message;
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -53,7 +61,7 @@ public class MessagePool {
         }
     }
 
-    private void archiveMessage(@NotNull Message message) throws IOException {
+    public void putMessageToCache(@NotNull Message message) throws IOException {
         cache.add(message);
         if (cache.size() == MAX_NUMBER_OF_LOST_MESSAGES) {
             storage.store(cache);

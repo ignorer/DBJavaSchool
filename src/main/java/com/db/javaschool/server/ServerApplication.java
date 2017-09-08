@@ -9,7 +9,6 @@ import com.db.javaschool.server.exception.RequestParsingException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -94,7 +93,7 @@ public class ServerApplication {
     private void outputThreadLifecycle() {
         while (!timeToExit.get()) {
             try {
-                Message message = context.getPool().getMessage();
+                Message message = context.getPool().getMessageFromDeque();
 
                 Collection<User> connections = context.lockConnections();
 
