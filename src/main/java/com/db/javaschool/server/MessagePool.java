@@ -21,7 +21,7 @@ public class MessagePool {
     private final List<Message> cache = new ArrayList<>();
     private final Storage storage;
 
-    public MessagePool(FileSystemStorage storage) throws IOException {
+    public MessagePool(Storage storage) throws IOException {
         this.storage = storage;
     }
 
