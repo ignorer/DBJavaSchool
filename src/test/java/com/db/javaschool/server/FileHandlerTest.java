@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -27,7 +28,7 @@ public class FileHandlerTest {
     }
 
     @Test
-    public void shouldCreateFileWhenDump() {
+    public void shouldCreateFileWhenDump() throws IOException {
         fileHandler.dumpFile(new JSONObject());
 
         assertTrue(new File(folderPath + "/1_chatek.txt").exists());
@@ -35,7 +36,7 @@ public class FileHandlerTest {
     }
 
     @Test
-    public void shouldCorrectlyReadFromFileOnReadFile() {
+    public void shouldCorrectlyReadFromFileOnReadFile() throws IOException {
         String expectedString = "expected";
         MessagePool mockedPool = mock(MessagePool.class);
         when(mockedPool.toJson()).thenReturn(new JSONObject().put("expected", "expected"));

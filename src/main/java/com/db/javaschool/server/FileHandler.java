@@ -20,13 +20,11 @@ public class FileHandler {
         return fileNumber;
     }
 
-    public void dumpFile(JSONObject object) {
+    public void dumpFile(JSONObject object) throws IOException {
         File file = new File(folder, ++fileNumber + "_chatek.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write(object.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
