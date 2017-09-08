@@ -23,7 +23,7 @@ public class SystemStorageTest {
 
     @Before
     public void setUp() {
-        file = new File("storage/test");
+        file = new File("storage" + File.pathSeparator + "test");
     }
 
     @AfterClass
@@ -40,6 +40,7 @@ public class SystemStorageTest {
         FileSystemStorage systemStorage = new FileSystemStorage(mockedFile);
 
         verify(mockedFile).mkdir();
+        //assertEquals(0, systemStorage.getNumberOfPages());
     }
 
     @Test
