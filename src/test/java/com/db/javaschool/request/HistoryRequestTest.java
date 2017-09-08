@@ -1,13 +1,14 @@
 package com.db.javaschool.request;
 
 import com.db.javaschool.protocol.request.ConnectRequest;
+import com.db.javaschool.protocol.request.HistoryRequest;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 
-public class ConnectRequestTest {
+public class HistoryRequestTest {
     private JSONObject jsonObject;
 
     @Before
@@ -20,7 +21,7 @@ public class ConnectRequestTest {
         String actualMessage = "";
 
         try {
-            new ConnectRequest(jsonObject);
+            new HistoryRequest(jsonObject);
         } catch (IllegalArgumentException e) {
             actualMessage = e.getMessage();
         }
@@ -33,8 +34,8 @@ public class ConnectRequestTest {
         String actualMessage = "";
 
         try {
-            new ConnectRequest(jsonObject.put("type", "NOT_CONNECT")
-                    .put("username", "username")
+            new HistoryRequest(jsonObject.put("type", "NOT_HIST")
+                    .put("page", 100)
                     .put("token", "token"));
         } catch (IllegalArgumentException e) {
             actualMessage = e.getMessage();
@@ -45,8 +46,8 @@ public class ConnectRequestTest {
 
     @Test
     public void shouldCorrectlySerializeToJsonWhenToJsonString() {
-        String jsonString = new ConnectRequest("username", "token").toJsonString();
+        String jsonString = new HistoryRequest("token", 100).toJsonString();
 
-        assertEquals("{\"type\":\"connect\",\"username\":\"username\",\"token\":\"token\"}", jsonString);
+        assertEquals("{\"page\":\"100\",\"type\":\"hist\",\"token\":\"token\"}", jsonString);
     }
 }
