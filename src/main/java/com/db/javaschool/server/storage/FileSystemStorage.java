@@ -34,7 +34,7 @@ public class FileSystemStorage implements Storage {
     @Override
     public void store(List<Message> messageList) throws IOException {
         //File file = new File(path, numberOfPages++ + "_chatek.txt");
-        String path = this.file.toPath().toString() + "\\" + numberOfPages++ + "_chatek.txt";
+        String path = this.file.toPath().toString() + System.lineSeparator() + numberOfPages++ + "_chatek.txt";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, true))) {
             writer.write(new JSONArray(messageList).toString());
