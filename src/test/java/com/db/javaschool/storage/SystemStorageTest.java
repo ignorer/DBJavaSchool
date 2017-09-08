@@ -27,11 +27,11 @@ public class SystemStorageTest {
         MessagePool pool = new MessagePool(fileSystemStorage);
 
         for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 5; i++) {
-            pool.putMessage(new Message(1, "user", "message"));
+            pool.putMessageToDeque(new Message(1, "user", "message"));
         }
 
         for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 5; i++) {
-            pool.getMessage();
+            pool.getMessageFromDeque();
         }
 
         fileSystemStorage.getData(0);

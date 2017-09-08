@@ -4,7 +4,6 @@ import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.storage.FileSystemStorage;
 import com.db.javaschool.server.storage.Storage;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public class MessagePool {
         this.storage = storage;
     }
 
-    public void putMessage(@NotNull Message message) throws InterruptedException {
+    public void putMessageToDeque(@NotNull Message message) throws InterruptedException {
         try {
             lock.writeLock().lock();
             messageQueue.putLast(message);
@@ -35,19 +34,19 @@ public class MessagePool {
         }
     }
 
-    public Message getMessage() throws IOException {
+    public Message getMessageFromDeque() throws IOException {
         try {
             Message message;
             lock.writeLock().lock();
             message = messageQueue.pollFirst();
-            archiveMessage(message);
+            putMessageToCache(message);
             return message;
         } finally {
             lock.writeLock().unlock();
         }
     }
 
-    private void archiveMessage(@NotNull Message message) throws IOException {
+    private void putMessageToCache(@NotNull Message message) throws IOException {
         cache.add(message);
         if (cache.size() == MAX_NUMBER_OF_LOST_MESSAGES) {
             storage.store(cache);

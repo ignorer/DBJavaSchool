@@ -1,11 +1,9 @@
 package com.db.javaschool.server.command;
 
-import com.db.javaschool.protocol.request.Request;
 import com.db.javaschool.protocol.request.SendRequest;
 import com.db.javaschool.server.Context;
 import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.entity.User;
-import org.json.JSONObject;
 
 public class SendCommand extends ServerCommand {
     public SendCommand(Context context) {
@@ -18,7 +16,7 @@ public class SendCommand extends ServerCommand {
         User user = context.getUser(request.getToken());
 
         try {
-            context.getPool().putMessage(new Message(0, user.getUsername(), request.getMessage()));
+            context.getPool().putMessageToDeque(new Message(0, user.getUsername(), request.getMessage()));
         } catch (InterruptedException e) {
             // ignore it
         }
