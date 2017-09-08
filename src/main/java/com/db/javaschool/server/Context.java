@@ -14,10 +14,6 @@ public class Context {
     private ReentrantLock connectionsLock = new ReentrantLock();
     private MessagePool pool;
 
-//    public Map<String, User> getConnections() {
-//        return connections;
-//    }
-
     public Context() throws IOException {
         this.pool = new MessagePool(new FileSystemStorage("./storage"));
     }

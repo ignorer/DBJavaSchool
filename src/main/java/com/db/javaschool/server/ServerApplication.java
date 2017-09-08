@@ -40,13 +40,21 @@ public class ServerApplication {
     public void run() {
         Scanner scanner = new Scanner(System.in);
 
-        // TODO: add scanning working directory for files
+        inputThread.run();
+        outputThread.run();
 
         while (!timeToExit.get()) {
             String input = scanner.next();
             if (input.equals("stop")) {
                 timeToExit.set(true);
             }
+        }
+        try {
+            inputThread.join();
+            outputThread.join();
+        } catch (InterruptedException e) {
+            inputThread.stop();
+            outputThread.stop();
         }
     }
 

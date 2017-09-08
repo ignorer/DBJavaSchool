@@ -20,7 +20,8 @@ public class ConnectCommand extends ServerCommand {
         Socket socket = (Socket) objects[1];
 
         try {
-            context.lockConnections().add(new User(request.getUsername(), socket));
+            context.lockConnections();
+            context.add(request.getToken(), request.getUsername(), socket);
         } finally {
             context.releaseConnections();
         }
