@@ -21,6 +21,14 @@ public class MessagePool {
     private final List<Message> cache = new ArrayList<>();
     private final Storage storage;
 
+    public BlockingDeque<Message> getMessageQueue() {
+        return messageQueue;
+    }
+
+    public List<Message> getCache() {
+        return cache;
+    }
+
     public MessagePool(Storage storage) throws IOException {
         this.storage = storage;
     }
@@ -46,7 +54,7 @@ public class MessagePool {
         }
     }
 
-    private void putMessageToCache(@NotNull Message message) throws IOException {
+    public void putMessageToCache(@NotNull Message message) throws IOException {
         cache.add(message);
         if (cache.size() == MAX_NUMBER_OF_LOST_MESSAGES) {
             storage.store(cache);

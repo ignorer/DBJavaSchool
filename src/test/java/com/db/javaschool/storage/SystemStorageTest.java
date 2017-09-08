@@ -6,6 +6,7 @@ import com.db.javaschool.server.storage.FileSystemStorage;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 public class SystemStorageTest {
@@ -16,7 +17,7 @@ public class SystemStorageTest {
     public void setUp() {
         fileSystemStorage = null;
         try {
-            fileSystemStorage = new FileSystemStorage("./storage/test");
+            fileSystemStorage = new FileSystemStorage(new File("./storage/test"));
         } catch (IOException e) {
             e.printStackTrace();
         }

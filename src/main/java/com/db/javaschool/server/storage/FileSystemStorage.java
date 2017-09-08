@@ -15,14 +15,13 @@ public class FileSystemStorage implements Storage {
     private int numberOfPages;
     private String path;
 
-    public FileSystemStorage(String path) throws IOException {
-        this.path = path;
-        File storageDirectory = new File(path).getAbsoluteFile();
+    public FileSystemStorage(File file) throws IOException {
+        this.path = file.getAbsolutePath();
 
-        if (storageDirectory.exists() && storageDirectory.isDirectory()) {
-            numberOfPages = storageDirectory.listFiles().length;
+        if (file.exists() && file.isDirectory()) {
+            numberOfPages = file.listFiles().length;
         } else {
-            Files.createDirectory(storageDirectory.toPath());
+            Files.createDirectory(file.toPath());
             numberOfPages = 0;
         }
     }
