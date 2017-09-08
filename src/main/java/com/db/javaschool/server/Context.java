@@ -19,13 +19,9 @@ public class Context {
         this.pool = new MessagePool(new FileSystemStorage(new File("./storage")));
     }
 
-    public void add(String token, String username, Socket socket) {
-        connections.put(token, new User(username, socket));
-    }
-
-    public Collection<User> lockConnections() {
+    public Map<String, User> lockConnections() {
         connectionsLock.lock();
-        return connections.values();
+        return connections;
     }
 
     public void releaseConnections() {
@@ -34,9 +30,5 @@ public class Context {
 
     public MessagePool getPool() {
         return pool;
-    }
-
-    public User getUser(String token) {
-        return connections.get(token);
     }
 }

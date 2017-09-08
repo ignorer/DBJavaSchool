@@ -1,10 +1,8 @@
 package com.db.javaschool.server;
 
 import com.db.javaschool.server.entity.Message;
-import com.db.javaschool.server.storage.FileSystemStorage;
 import com.db.javaschool.server.storage.Storage;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,12 +13,15 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MessagePool {
     private final static int MAX_NUMBER_OF_LOST_MESSAGES = 20;
-
-    private volatile int chunkCounter = 0;
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final BlockingDeque<Message> messageQueue = new LinkedBlockingDeque<>();
     private final List<Message> cache = new ArrayList<>();
     private final Storage storage;
+    private volatile int chunkCounter = 0;
+
+    public MessagePool(Storage storage) throws IOException {
+        this.storage = storage;
+    }
 
     public BlockingDeque<Message> getMessageQueue() {
         return messageQueue;
@@ -30,35 +31,23 @@ public class MessagePool {
         return cache;
     }
 
-    public MessagePool(Storage storage) throws IOException {
-        this.storage = storage;
-    }
-
     public void putMessageToDeque(@NotNull Message message) throws InterruptedException {
-        try {
-            lock.writeLock().lock();
-            messageQueue.putLast(message);
-        } finally {
-            lock.writeLock().unlock();
-        }
+
+        messageQueue.putLast(message);
+
     }
 
     public Message getMessageFromDeque() throws IOException {
+        Message message;
         try {
-            Message message;
-            lock.writeLock().lock();
-            try {
-                message = messageQueue.takeFirst();
-                putMessageToCache(message);
-                return message;
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException("Interuppted");
-            }
-
-        } finally {
-            lock.writeLock().unlock();
+            message = messageQueue.takeFirst();
+            putMessageToCache(message);
+            return message;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interrupted");
         }
+
     }
 
     public void putMessageToCache(@NotNull Message message) throws IOException {
