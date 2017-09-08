@@ -26,7 +26,7 @@ public class SendRequest implements Request {
     }
 
     @Override
-    public String toString() {
+    public String toJsonString() {
         return new JSONObject().
             put("type", "snd").
             put("message", message).

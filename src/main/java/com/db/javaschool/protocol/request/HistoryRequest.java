@@ -30,7 +30,7 @@ public class HistoryRequest implements Request {
     }
 
     @Override
-    public String toString() {
+    public String toJsonString() {
         return new JSONObject().
             put("type", "hist").
             put("page", Integer.toString(pageNumber)).

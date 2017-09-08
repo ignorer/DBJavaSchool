@@ -35,7 +35,7 @@ public class InputMain {
                 try {
                     String[] tokens = parseCommand(s);
                     Request request = buildRequest(tokens, args[0]);
-//                        stream.writeUTF(request.toString());
+                        stream.writeUTF(request.toString());
                 } catch (IllegalArgumentException e) {
                     // ignore it
                 }

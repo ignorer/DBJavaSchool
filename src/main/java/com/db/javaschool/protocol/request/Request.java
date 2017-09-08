@@ -6,4 +6,6 @@ public interface Request {
     enum RequestType {
         CONNECT, HISTORY, HISTORY_INFO, SEND
     }
+
+    String toJsonString();
 }

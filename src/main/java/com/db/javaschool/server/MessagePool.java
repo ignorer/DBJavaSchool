@@ -2,6 +2,7 @@ package com.db.javaschool.server;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -16,18 +17,18 @@ public class MessagePool {
         pool.add(message);
         if (pool.size() == 1000) {
             dumpToFile();
+            pool.clear();
         }
         lock.writeLock().unlock();
     }
 
     public void addMessage(JSONObject message) {
-
         lock.writeLock().lock();
-        if (pool.size() >= 950) {
+        pool.add(new Message(message));
+        if (pool.size() == 1000) {
             dumpToFile();
             pool.clear();
         }
-        pool.add(new Message(message));
         lock.writeLock().unlock();
     }
 
@@ -45,7 +46,11 @@ public class MessagePool {
 
     public void dumpToFile() {
         FileHandler fileHandler = new FileHandler("target");
-        fileHandler.dumpFile(toJson());
+        try {
+            fileHandler.dumpFile(toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONObject toJson() {

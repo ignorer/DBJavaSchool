@@ -1,12 +1,13 @@
 package com.db.javaschool.protocol.request;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.IllegalFormatException;
 
 public class ConnectRequest implements Request {
-    private final String username;
-    private final String token;
+    private String username;
+    private String token;
 
     public ConnectRequest(String username, String token) {
         this.username = username;
@@ -14,24 +15,27 @@ public class ConnectRequest implements Request {
     }
 
     public ConnectRequest(JSONObject json) throws IllegalFormatException {
-        String type = json.getString("type");
-        if (type == null || !type.equals("username")) {
-            throw new IllegalArgumentException("wrong request type");
+        String type = "";
+
+        try {
+            type = json.getString("type");
+            username = json.getString("username");
+            token = json.getString("token");
+        } catch (JSONException e) {
+            throw new IllegalArgumentException("Wrong json format");
         }
-        username = json.getString("username");
-        token = json.getString("token");
-        if (token == null || username == null) {
-            throw new IllegalArgumentException("wrong json format");
+
+        if (!type.equals("connect")) {
+            throw new IllegalArgumentException("Wrong request type");
         }
     }
 
-    @Override
-    public String toString() {
+    public String toJsonString() {
         return new JSONObject().
-            put("type", "snd").
-            put("username", username).
-            put("token", token).
-            toString();
+                put("type", "connect").
+                put("username", username).
+                put("token", token).
+                toString();
     }
 
     @Override
