@@ -53,25 +53,28 @@ public class OutputMain {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            JSONObject json = new JSONObject(inputStr);
-            if (json.getString("type") == null) {
-                throw new RequestParsingException("cannot determine type of request", inputStr);
-            }
-            try {
-                switch (json.getString("type")) {
-                    case "snd":
-                        outputMessage(json.getString("message"));
-                        break;
-                    case "hist":
+            outputMessage(inputStr);
+//            JSONObject json = new JSONObject(inputStr);
+//            System.out.println(json.get("username") + ": " + json.get("message"));
 
-                    case "hist_info":
-
-                    case "connect":
-                }
-            } catch (IllegalArgumentException | JSONException e) {
-                throw new RequestParsingException("some required data is missing or has invalid format", inputStr);
-            }
-            throw new RequestParsingException("unknown type", inputStr);
+//            if (json.getString("type") == null) {
+//                throw new RequestParsingException("cannot determine type of request", inputStr);
+//            }
+//            try {
+//                switch (json.getString("type")) {
+//                    case "snd":
+//                        outputMessage(json.getString("message"));
+//                        break;
+//                    case "hist":
+//
+//                    case "hist_info":
+//
+//                    case "connect":
+//                }
+//            } catch (IllegalArgumentException | JSONException e) {
+//                throw new RequestParsingException("some required data is missing or has invalid format", inputStr);
+//            }
+//            throw new RequestParsingException("unknown type", inputStr);
         }
     }
 

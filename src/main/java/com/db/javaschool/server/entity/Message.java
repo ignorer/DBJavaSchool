@@ -6,17 +6,26 @@ public class Message {
     private long timeStamp;
     private String userName;
     private String message;
+    private JSONObject jsonObject;
 
     public Message(long timeStamp, String userName, String message) {
         this.timeStamp = timeStamp;
         this.userName = userName;
         this.message = message;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", userName);
+        jsonObject.put("message", message);
+    }
+
+    public JSONObject getJsonObject() {
+        return jsonObject;
     }
 
     public Message(JSONObject jsonObject) {
         this.timeStamp = (long) jsonObject.get("timestamp");
         this.userName = (String) jsonObject.get("username");
         this.message = (String) jsonObject.get("msg");
+
     }
 
     public long getTimeStamp() {
@@ -66,4 +75,6 @@ public class Message {
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
     }
+
+
 }
