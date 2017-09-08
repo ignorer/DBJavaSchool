@@ -6,6 +6,7 @@ import com.db.javaschool.protocol.request.Request;
 import com.db.javaschool.protocol.request.SendRequest;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,10 +23,26 @@ public class InputMain {
             return;
         }
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            Socket socket = new Socket("127.0.0.1", 6666);
-            OutputStream out = socket.getOutputStream();
-            DataOutputStream stream = new DataOutputStream(out);
+        try (Socket serverSocket = new Socket("127.0.0.1", 6666);
+             Socket outputConsoleSocket = new Socket("127.0.0.1", 6667);
+             DataInputStream inputStremFromServer = new DataInputStream(serverSocket.getInputStream());
+             DataOutputStream outputStreamToServer = new DataOutputStream(serverSocket.getOutputStream());
+             DataOutputStream outputStreamToOutputConsole = new DataOutputStream(outputConsoleSocket.getOutputStream());
+        )
+        {
+            new Thread(() -> {
+                while (true) {
+                    try {
+                        outputStreamToOutputConsole.writeUTF(inputStremFromServer.readUTF());
+                    } catch (IOException e) {
+                        throw new RuntimeException("I have no purpose to live anymore");
+                    }
+                }
+
+            }).start();
+
+
+            Scanner scanner = new Scanner(System.in);
             while (true) {
                 String s = scanner.nextLine();
                 if (s.equals("/exit")) {
@@ -35,14 +52,17 @@ public class InputMain {
                 try {
                     String[] tokens = parseCommand(s);
                     Request request = buildRequest(tokens, args[0]);
-                        stream.writeUTF(request.toString());
+                        outputStreamToServer.writeUTF(request.toString());
                 } catch (IllegalArgumentException e) {
                     // ignore it
                 }
             }
+
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("");
         }
+
+
     }
 
     /**
