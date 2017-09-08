@@ -25,16 +25,15 @@ public class ServerTest {
     @Test
     public void shouldDumpToFileWhenPoolIsGoingToOverflow() {
         MessagePool spy = spy(new MessagePool());
-        Message mockedMessage = mock(Message.class);
 
         for (int i = 0; i < OVERFLOW_MESSAGE_COUNT + 10; i++) {
-            spy.addMessage(mockedMessage);
+            spy.addMessage(mock(Message.class));
         }
 
         verify(spy).dumpToFile();
     }
 
-    @Test @Ignore
+    @Test
     public void shouldOpenOutputStreamWhenContextSendAll() throws IOException {
         Context mockedContext = new Context(new MessagePool());
         Socket spySocket = spy(new Socket());
@@ -49,7 +48,7 @@ public class ServerTest {
     public void shouldAddAndIncrementSizeOfPoolWhenConnectionAdded() {
         Context context = new Context(new MessagePool());
 
-        context.add("Test", new Socket());
+        context.add("Test", mock(Socket.class));
 
         assertEquals(1, context.getConnections().size());
         assertTrue(context.getConnections().containsKey("Test"));

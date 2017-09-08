@@ -15,7 +15,7 @@ public class MessagePool {
         lock.writeLock().lock();
         pool.add(message);
         if (pool.size() == 1000) {
-
+            dumpToFile();
         }
         lock.writeLock().unlock();
     }

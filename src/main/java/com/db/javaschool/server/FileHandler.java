@@ -16,6 +16,10 @@ public class FileHandler {
         fileNumber = new File(folder).listFiles().length;
     }
 
+    public int getFileNumber() {
+        return fileNumber;
+    }
+
     public void dumpFile(JSONObject object) {
         File file = new File(folder, ++fileNumber + "_chatek.txt");
 
