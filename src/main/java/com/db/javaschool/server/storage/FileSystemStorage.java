@@ -44,7 +44,7 @@ public class FileSystemStorage implements Storage {
     @Override
     public List<Message> getData(int fileNumber) throws IOException {
         String jsonString = "";
-        String path = this.file.toPath().toString() + "\\" + fileNumber + "_chatek.txt";
+        String path = this.file.toPath().toString() + System.lineSeparator() + fileNumber + "_chatek.txt";
 
         try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
