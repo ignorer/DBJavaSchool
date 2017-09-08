@@ -6,15 +6,13 @@ import com.db.javaschool.protocol.request.Request;
 import com.db.javaschool.protocol.request.SendRequest;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class InputMain {
     public static void main(String[] args) {
@@ -33,8 +31,15 @@ public class InputMain {
             new Thread(() -> {
                 while (true) {
                     try {
-                        outputStreamToOutputConsole.writeUTF(inputStremFromServer.readUTF());
-                    } catch (IOException e) {
+                       String s =  inputStremFromServer.readUTF();
+                        System.out.println("Received " + s);
+                       outputStreamToOutputConsole.writeUTF(s);
+
+
+                    } catch (EOFException ex) {
+                        // do nothing
+                    }
+                    catch (IOException e) {
                         throw new RuntimeException("I have no purpose to live anymore");
                     }
                 }
@@ -52,14 +57,14 @@ public class InputMain {
                 try {
                     String[] tokens = parseCommand(s);
                     Request request = buildRequest(tokens, args[0]);
-                        outputStreamToServer.writeUTF(request.toString());
+                    outputStreamToServer.writeUTF(request.toString());
                 } catch (IllegalArgumentException e) {
                     // ignore it
                 }
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("");
+            throw new RuntimeException(e);
         }
 
 
@@ -84,7 +89,7 @@ public class InputMain {
         String commandName = input.substring(0, firstSpace);
         switch (commandName) {
             case "snd":
-                return new String[]{commandName, input.substring(firstSpace + 1, input.length())};
+                return new String[]{commandName, input.substring(firstSpace+1, input.length())};
             case "hist_info":
                 return new String[]{commandName};
             case "hist":
