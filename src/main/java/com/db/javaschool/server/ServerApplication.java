@@ -67,7 +67,7 @@ public class ServerApplication {
                         System.err.println("warning: couldn't get ");
                         continue;
                     }
-                    command.execute(request);
+                    command.execute(request, inputSocket);
                 } catch (RequestParsingException e) {
                     synchronized (systemErrMonitor) {
                         System.err.println(String.format("warning: request is not valid.\nreason: %s\brequest: %s",

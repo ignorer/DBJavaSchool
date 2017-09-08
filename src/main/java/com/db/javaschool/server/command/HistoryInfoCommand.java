@@ -10,7 +10,7 @@ public class HistoryInfoCommand extends ServerCommand {
     }
 
     @Override
-    public void execute(Request request) {
+    public void execute(Object... objects) {
 
     }
 }

@@ -6,7 +6,7 @@ import org.json.JSONObject;
 
 public abstract class ServerCommand {
     protected Context context;
-    public abstract void execute(Request request);
+    public abstract void execute(Object... objects);
 
     public ServerCommand(Context context) {
         this.context = context;

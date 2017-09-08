@@ -54,9 +54,9 @@ public class MessagePool {
         }
     }
 
-    public void dumpToFile(List<Message> cache) {
-        storage.dump();
-    }
+//    public void dumpToFile(List<Message> cache) {
+//        storage.dump();
+//    }
 
 //////////////////////////////////////////////////////////////////////////
 //    public void addMessage(Message message) {
