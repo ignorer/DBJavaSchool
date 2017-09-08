@@ -99,7 +99,7 @@ public class ServerApplication {
                 });
             } catch (IOException e) {
                 synchronized (systemErrMonitor) {
-                    System.err.println("huy");
+                    System.err.println("cannot save to file");
                 }
             } finally {
                 context.releaseConnections();

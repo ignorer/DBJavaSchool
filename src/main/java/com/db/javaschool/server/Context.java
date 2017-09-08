@@ -39,6 +39,6 @@ public class Context {
     }
 
     public User getUser(String token) {
-        connections.get(token);
+        return connections.get(token);
     }
 }
