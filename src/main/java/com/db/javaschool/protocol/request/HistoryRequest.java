@@ -1,5 +1,6 @@
 package com.db.javaschool.protocol.request;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.IllegalFormatException;
@@ -14,23 +15,23 @@ public class HistoryRequest implements Request {
     }
 
     public HistoryRequest(JSONObject json) throws IllegalFormatException {
-        String type = json.getString("type");
-        if (type == null || !type.equals("hist")) {
-            throw new IllegalArgumentException("wrong request type");
-        }
-        token = json.getString("token");
+        String type = "";
+
         try {
-            pageNumber = Integer.parseInt(json.getString("page"));
-        } catch (RuntimeException e) {
-            throw new IllegalArgumentException("wrong page number");
+            type = json.getString("type");
+            pageNumber = json.getInt("page");
+            token = json.getString("token");
+        } catch (JSONException e) {
+            throw new IllegalArgumentException("Wrong json format");
         }
-        if (token == null) {
-            throw new IllegalArgumentException("wrong json format");
+
+        if (!type.equals("hist")) {
+            throw new IllegalArgumentException("Wrong request type");
         }
     }
 
     @Override
-    public String toString() {
+    public String toJsonString() {
         return new JSONObject().
             put("type", "hist").
             put("page", Integer.toString(pageNumber)).

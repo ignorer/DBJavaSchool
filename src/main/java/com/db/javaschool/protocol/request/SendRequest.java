@@ -1,5 +1,6 @@
 package com.db.javaschool.protocol.request;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.IllegalFormatException;
@@ -14,19 +15,23 @@ public class SendRequest implements Request {
     }
 
     public SendRequest(JSONObject json) throws IllegalFormatException {
-        String type = json.getString("type");
-        if (type == null || !type.equals("message")) {
-            throw new IllegalArgumentException("wrong request type");
+        String type = "";
+
+        try {
+            type = json.getString("type");
+            message = json.getString("message");
+            token = json.getString("token");
+        } catch (JSONException e) {
+            throw new IllegalArgumentException("Wrong json format");
         }
-        message = json.getString("message");
-        token = json.getString("token");
-        if (token == null || message == null) {
-            throw new IllegalArgumentException("wrong json format");
+
+        if (!type.equals("snd")) {
+            throw new IllegalArgumentException("Wrong request type");
         }
     }
 
     @Override
-    public String toString() {
+    public String toJsonString() {
         return new JSONObject().
             put("type", "snd").
             put("message", message).

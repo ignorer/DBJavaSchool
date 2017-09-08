@@ -23,7 +23,7 @@ public class HistoryInfoRequest implements Request {
     }
 
     @Override
-    public String toString() {
+    public String toJsonString() {
         return new JSONObject().
             put("type", "hist_info").
             put("token", token).

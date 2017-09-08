@@ -3,33 +3,36 @@ package com.db.javaschool.client;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 public class OutputMain {
-    private String HOSTNAME = "127.0.0.1";
-    private int PORT = 6667;
+    private final int PORT = 6667;
+    private Socket socket;
+    private DataInputStream dataInputStream;
 
-    public OutputMain() {
+    public OutputMain() throws IOException {
+        startListener();
+
     }
 
-    public OutputMain(String HOSTNAME, int PORT) {
-        this.HOSTNAME = HOSTNAME;
-        this.PORT = PORT;
+
+    private void startListener() throws IOException {
+        ServerSocket serverSocket = new ServerSocket(PORT);
+        socket = serverSocket.accept();
+        setInputStream();
     }
 
-    private Socket openConnection() throws IOException {
-        return new Socket(HOSTNAME, PORT);
+    private void setInputStream() throws IOException {
+        dataInputStream = new DataInputStream(socket.getInputStream());
     }
 
-    private static BufferedReader getBufferedReader(Socket socket) throws IOException {
-        return new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-    }
+    public void readMessageFlow() throws IOException {
 
-    public void readMessages(BufferedReader bufferedReader) throws IOException {
-        String inputStr;
-        while ((inputStr = bufferedReader.readLine()) != null) {
+        while (true)  {
+            String inputStr = dataInputStream.readUTF();
             JSONObject json = new JSONObject(inputStr);
 
             if (!json.has("type")) {
@@ -68,16 +71,9 @@ public class OutputMain {
 
     public static void main(String[] args) throws IOException {
 
-        if (args.length==0) {
-            System.out.println("Invalid number of arguments");
-            System.exit(1);
-        }
-
         OutputMain outputMain = new OutputMain();
-        BufferedReader bufferedReader = getBufferedReader(outputMain.openConnection());
-        while (true) {
-            outputMain.readMessages(bufferedReader);
-        }
+        outputMain.readMessageFlow();
+
 
     }
 

@@ -24,7 +24,7 @@ public class OutputClientTest {
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);
-        spy.readMessages(bufferedReader);
+//        spy.readMessageFlow(bufferedReader);
 
         verify(spy).outputMessage("Hello");
 
@@ -41,7 +41,7 @@ public class OutputClientTest {
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);
-        spy.readMessages(bufferedReader);
+//        spy.readMessageFlow(bufferedReader);
 
         verify(spy).outputMessage("Hello\nThere");
 
@@ -60,7 +60,7 @@ public class OutputClientTest {
 
         OutputMain sut = new OutputMain();
         OutputMain spy = spy(sut);
-        spy.readMessages(bufferedReader);
+//        spy.readMessageFlow(bufferedReader);
 
         verify(spy).outputMessage("history: msg1");
         verify(spy).outputMessage("history: msg2");

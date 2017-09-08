@@ -62,18 +62,18 @@ public class MessagePool {
         pool.add(message);
         if (pool.size() == 1000) {
 
+            pool.clear();
         }
         lock.writeLock().unlock();
     }
 
     public void addMessage(JSONObject message) {
-
         lock.writeLock().lock();
-        if (pool.size() >= 950) {
+        pool.add(new Message(message));
+        if (pool.size() == 1000) {
             dumpToFile(cache);
             pool.clear();
         }
-        pool.add(new Message(message));
         lock.writeLock().unlock();
     }
 
@@ -87,6 +87,15 @@ public class MessagePool {
         lock.readLock().unlock();
 
         return answer;
+    }
+
+    public void dumpToFile() {
+        FileHandler fileHandler = new FileHandler("target");
+        try {
+            fileHandler.dumpFile(toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONObject toJson() {
