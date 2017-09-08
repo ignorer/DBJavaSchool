@@ -122,7 +122,7 @@ public class ServerApplication {
                     try {
                         DataOutputStream out = new DataOutputStream(v.getDataOutputStream());
                         System.out.println("Sending message " + message + " to user " + v.getUsername());
-                        out.writeUTF(message.toJSON());
+                        out.writeUTF(message.toJSON().toString());
                     } catch (IOException e) {
                         // ignore it
                     }

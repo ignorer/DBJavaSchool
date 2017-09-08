@@ -53,9 +53,9 @@ public class OutputMain {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            outputMessage(inputStr);
-//            JSONObject json = new JSONObject(inputStr);
-//            System.out.println(json.get("username") + ": " + json.get("message"));
+//            outputMessage(inputStr);
+            JSONObject json = new JSONObject(inputStr);
+            System.out.println(json.get("username") + " says: " + json.get("message"));
 
 //            if (json.getString("type") == null) {
 //                throw new RequestParsingException("cannot determine type of request", inputStr);

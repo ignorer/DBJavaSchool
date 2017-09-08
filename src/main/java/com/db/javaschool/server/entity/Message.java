@@ -52,8 +52,11 @@ public class Message {
         this.message = message;
     }
 
-    public String toJSON() {
-        return message;
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("username", userName);
+        jsonObject.put("message", message);
+        return jsonObject;
     }
 
     @Override
