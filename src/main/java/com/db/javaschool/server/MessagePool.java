@@ -1,6 +1,6 @@
 package com.db.javaschool.server;
 
-import com.db.javaschool.server.storage.FilesystemStorage;
+import com.db.javaschool.server.storage.FileSystemStorage;
 import com.db.javaschool.server.storage.Storage;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -22,7 +22,7 @@ public class MessagePool {
     private final Storage storage;
 
     public MessagePool() throws IOException {
-        storage = new FilesystemStorage("./storage");
+        storage = new FileSystemStorage("./storage");
     }
 
     public void putMessage(@NotNull Message message) throws InterruptedException {
@@ -53,26 +53,26 @@ public class MessagePool {
     }
 
     public void dumpToFile(List<Message> cache) {
-        storage.dump();
+        storage.store(cache);
     }
 
         //////////////////////////////////////////////////////////////////////////
     public void addMessage(Message message) {
         lock.writeLock().lock();
-        pool.add(message);
-        if (pool.size() == 1000) {
+        cache.add(message);
+        if (cache.size() == 1000) {
 
-            pool.clear();
+            cache.clear();
         }
         lock.writeLock().unlock();
     }
 
     public void addMessage(JSONObject message) {
         lock.writeLock().lock();
-        pool.add(new Message(message));
-        if (pool.size() == 1000) {
+        cache.add(new Message(message));
+        if (cache.size() == 1000) {
             dumpToFile(cache);
-            pool.clear();
+            cache.clear();
         }
         lock.writeLock().unlock();
     }
@@ -83,7 +83,7 @@ public class MessagePool {
         JSONObject answer;
 
         lock.readLock().lock();
-            answer = new JSONObject(pool);
+            answer = new JSONObject(cache);
         lock.readLock().unlock();
 
         return answer;
@@ -99,6 +99,6 @@ public class MessagePool {
     }
 
     public JSONObject toJson() {
-        return new JSONObject().put("history", pool);
+        return new JSONObject().put("history", cache);
     }
 }
