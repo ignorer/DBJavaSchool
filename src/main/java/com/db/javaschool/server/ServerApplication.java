@@ -59,14 +59,14 @@ public class ServerApplication {
 
     private void inputThreadLifecycle() {
         try (ServerSocket socket = new ServerSocket(port)) {
-            while (timeToExit.get()) {
-                try (
+            while (!timeToExit.get()) {
+                try  {
                     Socket inputSocket = socket.accept();
                     DataInputStream in = new DataInputStream(inputSocket.getInputStream());
-                    DataOutputStream out = new DataOutputStream(inputSocket.getOutputStream())) {
+                    DataOutputStream out = new DataOutputStream(inputSocket.getOutputStream());
 
                     String input = in.readUTF();
-
+                    System.out.println("I've received " + input);
                     Request request = RequestParser.parseRequest(input);
 
                     ServerCommand command = commands.get(request.getType());
@@ -96,9 +96,11 @@ public class ServerApplication {
                 Message message = context.getPool().getMessageFromDeque();
 
                 Collection<User> connections = context.lockConnections();
+
                 connections.forEach(user -> {
                     try {
                         DataOutputStream out = new DataOutputStream(user.getSocket().getOutputStream());
+                        System.out.println("Sending message " + message + " to user " + user.getUsername());
                         out.writeUTF(message.toJSON());
                     } catch (IOException e) {
                         // ignore it

@@ -4,6 +4,7 @@ import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.storage.FileSystemStorage;
 import com.db.javaschool.server.storage.Storage;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,9 +47,15 @@ public class MessagePool {
         try {
             Message message;
             lock.writeLock().lock();
-            message = messageQueue.pollFirst();
-            putMessageToCache(message);
-            return message;
+            try {
+                message = messageQueue.takeFirst();
+                putMessageToCache(message);
+                return message;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Interuppted");
+            }
+
         } finally {
             lock.writeLock().unlock();
         }

@@ -24,11 +24,8 @@ public class OutputMain {
     }
 
     public static void main(String[] args) throws IOException {
-
         OutputMain outputMain = new OutputMain();
         outputMain.readMessageFlow();
-
-
     }
 
     private void startListener() {
