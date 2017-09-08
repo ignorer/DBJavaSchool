@@ -13,6 +13,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MessagePool {
     private final static int MAX_NUMBER_OF_LOST_MESSAGES = 20;
+
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final BlockingDeque<Message> messageQueue = new LinkedBlockingDeque<>();
     private final List<Message> cache = new ArrayList<>();
@@ -21,6 +22,10 @@ public class MessagePool {
 
     public MessagePool(Storage storage) throws IOException {
         this.storage = storage;
+    }
+
+    public Storage getStorage() {
+        return storage;
     }
 
     public BlockingDeque<Message> getMessageQueue() {
