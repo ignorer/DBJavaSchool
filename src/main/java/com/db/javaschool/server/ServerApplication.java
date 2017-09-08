@@ -11,17 +11,22 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ServerApplication {
     private final AtomicBoolean timeToExit = new AtomicBoolean(false);
-    private final Thread inputThread = new Thread(this::inputThreadLifecycle);
-    private final Thread outputThread = new Thread(this::outputThreadLifecycle);
     private final int port;
     private final Context context;
     private final Map<Request.RequestType, ServerCommand> commands;
     private final Object systemErrMonitor = new Object();
+    private final Thread inputThread = new Thread(this::inputThreadLifecycle);
+    private final Thread outputThread = new Thread(this::outputThreadLifecycle);
 
     public ServerApplication(int port) throws IOException {
         context = new Context();
@@ -39,8 +44,10 @@ public class ServerApplication {
     public void run() {
         Scanner scanner = new Scanner(System.in);
 
-        inputThread.run();
-        outputThread.run();
+        inputThread.setDaemon(true);
+        outputThread.setDaemon(true);
+        inputThread.start();
+        outputThread.start();
 
         while (!timeToExit.get()) {
             String input = scanner.next();
@@ -52,34 +59,51 @@ public class ServerApplication {
             inputThread.join();
             outputThread.join();
         } catch (InterruptedException e) {
-            inputThread.stop();
-            outputThread.stop();
+            Thread.currentThread().interrupt();
+            inputThread.interrupt();
+            outputThread.interrupt();
         }
     }
 
     private void inputThreadLifecycle() {
         try (ServerSocket socket = new ServerSocket(port)) {
             while (!timeToExit.get()) {
-                try  {
+                ExecutorService executorService = Executors.newFixedThreadPool(1000);
+
+                try {
                     Socket inputSocket = socket.accept();
-                    DataInputStream in = new DataInputStream(inputSocket.getInputStream());
-                    DataOutputStream out = new DataOutputStream(inputSocket.getOutputStream());
+                    executorService.submit(new Thread(() -> {
+                        try (DataInputStream clientInputStream = new DataInputStream(inputSocket.getInputStream());
+                             DataOutputStream clientOutputStream = new DataOutputStream(inputSocket.getOutputStream());) {
 
-                    String input = in.readUTF();
-                    System.out.println("I've received " + input);
-                    Request request = RequestParser.parseRequest(input);
+                            while (true) {
+                                String input = clientInputStream.readUTF();
+                                System.out.println("Received input " + input);
+                                try {
+                                    Request request = RequestParser.parseRequest(input);
 
-                    ServerCommand command = commands.get(request.getType());
-                    if (command == null) {
-                        System.err.println("warning: couldn't get ");
-                        continue;
-                    }
-                    command.execute(request, inputSocket);
-                } catch (RequestParsingException e) {
-                    synchronized (systemErrMonitor) {
-                        System.err.println(String.format("warning: request is not valid.\nreason: %s\brequest: %s",
-                            e.getMessage(), e.getRequestText()));
-                    }
+                                    ServerCommand command = commands.get(request.getType());
+                                    if (command == null) {
+                                        System.err.println("warning: couldn't get ");
+                                        return;
+                                    }
+                                    command.execute(request, clientOutputStream);
+
+                                } catch (RequestParsingException e) {
+                                    synchronized (systemErrMonitor) {
+                                        System.err.println(String.format("warning: request is not valid.\nreason: %s\brequest: %s",
+                                                e.getMessage(), e.getRequestText()));
+                                    }
+                                }
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException("Something happened");
+                        }
+                    }));
+
+
+                } catch (IOException e) {
+
                 }
             }
         } catch (IOException e) {
@@ -95,12 +119,11 @@ public class ServerApplication {
             try {
                 Message message = context.getPool().getMessageFromDeque();
 
-                Collection<User> connections = context.lockConnections();
-
-                connections.forEach(user -> {
+                Map<String, User> connections = context.lockConnections();
+                connections.forEach((k, v) -> {
                     try {
-                        DataOutputStream out = new DataOutputStream(user.getSocket().getOutputStream());
-                        System.out.println("Sending message " + message + " to user " + user.getUsername());
+                        DataOutputStream out = new DataOutputStream(v.getDataOutputStream());
+                        System.out.println("Sending message " + message + " to user " + v.getUsername());
                         out.writeUTF(message.toJSON());
                     } catch (IOException e) {
                         // ignore it

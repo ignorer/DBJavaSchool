@@ -1,21 +1,22 @@
 package com.db.javaschool.server.entity;
 
+import java.io.DataOutputStream;
 import java.net.Socket;
 
 public class User {
     private String username;
-    private Socket socket;
+    private DataOutputStream dataOutputStream;
 
-    public User(String username, Socket socket) {
+    public User(String username, DataOutputStream dataOutputStream) {
         this.username = username;
-        this.socket = socket;
+        this.dataOutputStream = dataOutputStream;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public Socket getSocket() {
-        return socket;
+    public DataOutputStream getDataOutputStream() {
+        return dataOutputStream;
     }
 }
