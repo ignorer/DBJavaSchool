@@ -39,9 +39,15 @@ public class MessagePool {
         try {
             Message message;
             lock.writeLock().lock();
-            message = messageQueue.pollFirst();
-            archiveMessage(message);
-            return message;
+            try {
+                message = messageQueue.takeFirst();
+                archiveMessage(message);
+                return message;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Interuppted");
+            }
+
         } finally {
             lock.writeLock().unlock();
         }

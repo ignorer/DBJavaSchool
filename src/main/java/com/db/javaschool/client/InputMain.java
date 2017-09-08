@@ -1,9 +1,6 @@
 package com.db.javaschool.client;
 
-import com.db.javaschool.protocol.request.HistoryInfoRequest;
-import com.db.javaschool.protocol.request.HistoryRequest;
-import com.db.javaschool.protocol.request.Request;
-import com.db.javaschool.protocol.request.SendRequest;
+import com.db.javaschool.protocol.request.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -28,11 +25,15 @@ public class InputMain {
              DataOutputStream outputStreamToOutputConsole = new DataOutputStream(outputConsoleSocket.getOutputStream());
         )
         {
+          ConnectRequest connectRequest = new ConnectRequest(args[0], args[0]);
+          outputStreamToServer.writeUTF(connectRequest.toJsonString());
+          outputStreamToServer.flush();
+
             new Thread(() -> {
                 while (true) {
                     try {
                        String s =  inputStremFromServer.readUTF();
-                        System.out.println("Received " + s);
+                       System.out.println("Received " + s);
                        outputStreamToOutputConsole.writeUTF(s);
 
 
@@ -57,7 +58,7 @@ public class InputMain {
                 try {
                     String[] tokens = parseCommand(s);
                     Request request = buildRequest(tokens, args[0]);
-                    outputStreamToServer.writeUTF(request.toString());
+                    outputStreamToServer.writeUTF(request.toJsonString());
                 } catch (IllegalArgumentException e) {
                     // ignore it
                 }
