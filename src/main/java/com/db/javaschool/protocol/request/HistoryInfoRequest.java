@@ -29,4 +29,13 @@ public class HistoryInfoRequest implements Request {
             put("token", token).
             toString();
     }
+
+    @Override
+    public RequestType getType() {
+        return RequestType.HISTORY_INFO;
+    }
+
+    public String getToken() {
+        return token;
+    }
 }

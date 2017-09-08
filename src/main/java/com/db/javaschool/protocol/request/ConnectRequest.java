@@ -33,4 +33,17 @@ public class ConnectRequest implements Request {
             put("token", token).
             toString();
     }
+
+    @Override
+    public RequestType getType() {
+        return RequestType.CONNECT;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getToken() {
+        return token;
+    }
 }

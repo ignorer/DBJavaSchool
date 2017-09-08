@@ -37,4 +37,17 @@ public class HistoryRequest implements Request {
             put("token", token).
             toString();
     }
+
+    @Override
+    public RequestType getType() {
+        return RequestType.HISTORY;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public int getPageNumber() {
+        return pageNumber;
+    }
 }
