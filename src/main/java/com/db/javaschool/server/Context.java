@@ -1,5 +1,6 @@
 package com.db.javaschool.server;
 import com.db.javaschool.server.entity.User;
+import com.db.javaschool.server.storage.FileSystemStorage;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,7 +19,7 @@ public class Context {
 //    }
 
     public Context() throws IOException {
-        this.pool = new MessagePool();
+        this.pool = new MessagePool(new FileSystemStorage("./storage"));
     }
 
     public void add(String token, String username, Socket socket) {

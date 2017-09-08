@@ -22,8 +22,8 @@ public class MessagePool {
     private final List<Message> cache = new ArrayList<>();
     private final Storage storage;
 
-    public MessagePool() throws IOException {
-        storage = new FileSystemStorage("./storage");
+    public MessagePool(FileSystemStorage storage) throws IOException {
+        this.storage = storage;
     }
 
     public void putMessage(@NotNull Message message) throws InterruptedException {
@@ -38,7 +38,7 @@ public class MessagePool {
     public Message getMessage() throws IOException {
         try {
             Message message;
-            lock.readLock().lock();
+            lock.writeLock().lock();
             message = messageQueue.pollFirst();
             archiveMessage(message);
             return message;

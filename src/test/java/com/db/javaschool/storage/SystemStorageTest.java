@@ -3,25 +3,37 @@ package com.db.javaschool.storage;
 import com.db.javaschool.server.MessagePool;
 import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.storage.FileSystemStorage;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
 public class SystemStorageTest {
-    @Test
-    public void test() throws IOException, InterruptedException {
-        FileSystemStorage fileSystemStorage = null;
+    FileSystemStorage fileSystemStorage;
+    private final int CRITICAL_MESSAGE_COUNT = 20;
+
+    @Before
+    public void setUp() {
+        fileSystemStorage = null;
         try {
-            fileSystemStorage = new FileSystemStorage("target");
+            fileSystemStorage = new FileSystemStorage("./storage/test");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-        MessagePool pool = new MessagePool();
+    @Test
+    public void test() throws IOException, InterruptedException {
+        MessagePool pool = new MessagePool(fileSystemStorage);
 
-        for (int i = 0; i < 30; i++) {
-            pool.putMessage(new Message(123, "user", "message"));
+        for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 5; i++) {
+            pool.putMessage(new Message(1, "user", "message"));
         }
 
+        for (int i = 0; i < CRITICAL_MESSAGE_COUNT + 5; i++) {
+            pool.getMessage();
+        }
+
+        fileSystemStorage.getData(0);
     }
 }

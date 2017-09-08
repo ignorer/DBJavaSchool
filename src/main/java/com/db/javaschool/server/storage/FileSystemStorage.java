@@ -7,10 +7,9 @@ import org.json.JSONObject;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.json.XMLTokener.entity;
 
 public class FileSystemStorage implements Storage {
     private int numberOfPages;
@@ -34,7 +33,7 @@ public class FileSystemStorage implements Storage {
         File file = new File(path, numberOfPages++ + "_chatek.txt");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            writer.write(new JSONObject(messageList).toString());
+            writer.write(new JSONArray(messageList).toString());
         }
     }
 
@@ -48,15 +47,16 @@ public class FileSystemStorage implements Storage {
                 jsonString += line;
             }
         }
-        JSONArray array = new JSONArray(jsonString);
-        List<Message> list = new ArrayList<Message>();
-        for(int i = 0; i < array.length(); i++){
-            //list.add(new Message());
+        List<Object> array = new JSONArray(jsonString).toList();
 
-//            /
-            //Message)(array.getJSONObject(i)
-
+        List<Message> list = new ArrayList<>();
+        for (Object object : array) {
+            list.add(new Message(
+                    (int) ((HashMap) object).get("timeStamp"),
+                    (String) ((HashMap) object).get("message"),
+                    (String) ((HashMap) object).get("userName")
+            ));
         }
-        return new LinkedList<Message>();
+        return list;
     }
 }
