@@ -36,10 +36,10 @@ public class SystemStorageTest {
 
     @Test
     public void shouldCreateEmptyFolderWhenConstructor() throws IOException, InterruptedException {
-        FileSystemStorage systemStorage = new FileSystemStorage(file);
+        File mockedFile = mock(File.class);
+        FileSystemStorage systemStorage = new FileSystemStorage(mockedFile);
 
-        assertTrue(file.isDirectory());
-        //assertEquals(0, systemStorage.getNumberOfPages());
+        verify(mockedFile).mkdir();
     }
 
     @Test
