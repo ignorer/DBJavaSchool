@@ -54,10 +54,9 @@ public class MessagePool {
         }
     }
 
-
-    public JSONObject toJson() {
-        return new JSONObject().put("history", cache);
-    }
+//    public void dumpToFile(List<Message> cache) {
+//        storage.dump();
+//    }
 
 //////////////////////////////////////////////////////////////////////////
 //    public void addMessage(Message message) {

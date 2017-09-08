@@ -34,21 +34,11 @@ public class Context {
         connectionsLock.unlock();
     }
 
-//    public void sendAll(String input) {
-//        connections.forEach((k, v) -> {
-//            try (DataOutputStream outputStream = new DataOutputStream( v.getSocket().getOutputStream())) {
-//                JSONObject json = new JSONObject();
-//                json.put("type", "snd");
-//                json.put("msg", input);
-//                outputStream.writeUTF(json.toString());
-//                System.out.println(json.toString());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//    }
-
     public MessagePool getPool() {
         return pool;
+    }
+
+    public User getUser(String token) {
+        connections.get(token);
     }
 }
