@@ -7,17 +7,12 @@ import java.util.Date;
 import java.util.List;
 
 public class FileHandler {
-
     private String folder;
     private int fileNumber;
 
     public FileHandler(String folder) {
         this.folder = folder;
         fileNumber = new File(folder).listFiles().length;
-    }
-
-    public int getFileNumber() {
-        return fileNumber;
     }
 
     public void dumpFile(JSONObject object) {

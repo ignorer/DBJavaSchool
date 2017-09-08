@@ -14,29 +14,47 @@ public class Main {
     /**
      * Accepts connection in endless loop
      * @param args
-     * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        Context context = new Context(new MessagePool());
-        ServerSocket serverSocket = new ServerSocket(6666);
-        ProtocolHandler handler = new ProtocolHandler(context);
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-        while (true) {
-            Socket clientSocket = serverSocket.accept();
-            executorService.submit(() -> {
-                try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream());) {
-                    while (true) {
-                        handler.handle(inputStream.readUTF(), clientSocket);
-                    }
-                } catch (EOFException e) {
-                } catch (SocketException e) {
-                } catch (IOException e) {
-                    executorService.shutdownNow();
-                    e.printStackTrace();
-                }
-            });
-        }
+//        Context context = new Context(new MessagePool());
+//        ServerSocket inputSocket = new ServerSocket(6666);
+////        ServerSocket outputSocket = new ServerSocket(6667);
+//        ProtocolHandler handler = new ProtocolHandler(context);
+//
+//        ExecutorService executorService = Executors.newFixedThreadPool(10);
+//
+//        while (true) {
+//            Socket clientSocket = inputSocket.accept();
+////            Socket clientSocket2 = outputSocket.accept();
+//            executorService.submit(() -> {
+//                DataInputStream inputStream = null;
+//                try {
+//                    inputStream = new DataInputStream(clientSocket.getInputStream());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    while (true) {
+//                        handler.handle(inputStream.readUTF(), clientSocket);
+//                    }
+//                } catch (EOFException e) {
+//                    while (true) {
+//                        try {
+//                            handler.handle(inputStream.readUTF(), clientSocket);
+//                        } catch (IOException e1) {
+//                            e1.printStackTrace();
+//                        }
+//                    }
+//                } catch (SocketException e) {
+//                } catch (IOException e) {
+//                    executorService.shutdownNow();
+//                    e.printStackTrace();
+//                }
+//            });
+//        }
+
+
     }
 }
