@@ -1,4 +1,4 @@
-package com.db.javaschool.server;
+package com.db.javaschool.server.entity;
 
 import org.json.JSONObject;
 
@@ -14,8 +14,8 @@ public class Message {
     }
 
     public Message(JSONObject jsonObject) {
-        this.timeStamp = (long) jsonObject.get("timeStamp");
-//        this.userName = (String) jsonObject.get("userName");
+        this.timeStamp = (long) jsonObject.get("timestamp");
+        this.userName = (String) jsonObject.get("username");
         this.message = (String) jsonObject.get("msg");
     }
 
@@ -41,5 +41,9 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String toJSON() {
+        return message;
     }
 }

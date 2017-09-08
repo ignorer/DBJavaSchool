@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 public class FileHandler {
-
     private String folder;
     private int fileNumber;
 
@@ -16,9 +15,6 @@ public class FileHandler {
         fileNumber = new File(folder).listFiles().length;
     }
 
-    public int getFileNumber() {
-        return fileNumber;
-    }
 
     public void dumpFile(JSONObject object) throws IOException {
         File file = new File(folder, ++fileNumber + "_chatek.txt");

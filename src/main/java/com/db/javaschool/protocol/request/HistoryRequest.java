@@ -25,7 +25,7 @@ public class HistoryRequest implements Request {
             throw new IllegalArgumentException("Wrong json format");
         }
 
-        if (!type.equals("connect")) {
+        if (!type.equals("hist")) {
             throw new IllegalArgumentException("Wrong request type");
         }
     }
