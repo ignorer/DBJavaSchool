@@ -36,8 +36,6 @@ public class ServerApplication {
         Map<Request.RequestType, ServerCommand> tempMap = new HashMap<>();
         tempMap.put(Request.RequestType.CONNECT, new ConnectCommand(context));
         tempMap.put(Request.RequestType.SEND, new SendCommand(context));
-        tempMap.put(Request.RequestType.HISTORY, new HistoryCommand(context));
-        tempMap.put(Request.RequestType.HISTORY_INFO, new HistoryInfoCommand(context));
         commands = Collections.unmodifiableMap(tempMap);
     }
 
