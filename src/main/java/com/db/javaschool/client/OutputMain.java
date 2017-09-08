@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,24 +16,35 @@ public class OutputMain {
 
     public OutputMain() throws IOException {
         startListener();
-
     }
 
 
-    private void startListener() throws IOException {
-        ServerSocket serverSocket = new ServerSocket(PORT);
-        socket = serverSocket.accept();
-        setInputStream();
+    private void startListener() {
+        try (ServerSocket serverSocket = new ServerSocket(PORT))
+        {
+            socket = serverSocket.accept();
+            setInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to start server on port "+ PORT);
+        }
+
     }
 
     private void setInputStream() throws IOException {
         dataInputStream = new DataInputStream(socket.getInputStream());
     }
 
-    public void readMessageFlow() throws IOException {
+    public void readMessageFlow()  {
 
         while (true)  {
-            String inputStr = dataInputStream.readUTF();
+            String inputStr = null;
+            try {
+                inputStr = dataInputStream.readUTF();
+            } catch (EOFException e) {
+                // Do nothing
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             JSONObject json = new JSONObject(inputStr);
 
             if (!json.has("type")) {
@@ -59,7 +71,7 @@ public class OutputMain {
             } else if ("error".equals(jsonMessageType)) {
                 // TO DO
             } else {
-                throw new RuntimeException("Unknown message type");
+                 // Unkown message
             }
         }
 
