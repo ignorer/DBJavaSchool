@@ -1,5 +1,6 @@
 package com.db.javaschool.server;
 
+import com.db.javaschool.server.entity.Message;
 import com.db.javaschool.server.storage.FilesystemStorage;
 import com.db.javaschool.server.storage.Storage;
 import org.jetbrains.annotations.NotNull;
@@ -34,12 +35,13 @@ public class MessagePool {
         }
     }
 
-    public void getMessage() {
-        Message message;
+    public Message getMessage() {
         try {
+            Message message;
             lock.readLock().lock();
             message = messageQueue.pollFirst();
             archiveMessage(message);
+            return message;
         } finally {
             lock.writeLock().unlock();
         }
@@ -56,49 +58,49 @@ public class MessagePool {
         storage.dump();
     }
 
-        //////////////////////////////////////////////////////////////////////////
-    public void addMessage(Message message) {
-        lock.writeLock().lock();
-        pool.add(message);
-        if (pool.size() == 1000) {
-
-            pool.clear();
-        }
-        lock.writeLock().unlock();
-    }
-
-    public void addMessage(JSONObject message) {
-        lock.writeLock().lock();
-        pool.add(new Message(message));
-        if (pool.size() == 1000) {
-            dumpToFile(cache);
-            pool.clear();
-        }
-        lock.writeLock().unlock();
-    }
-
-
-
-    public JSONObject getMessageChunk() {
-        JSONObject answer;
-
-        lock.readLock().lock();
-            answer = new JSONObject(pool);
-        lock.readLock().unlock();
-
-        return answer;
-    }
-
-    public void dumpToFile() {
-        FileHandler fileHandler = new FileHandler("target");
-        try {
-            fileHandler.dumpFile(toJson());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public JSONObject toJson() {
-        return new JSONObject().put("history", pool);
-    }
+//////////////////////////////////////////////////////////////////////////
+//    public void addMessage(Message message) {
+//        lock.writeLock().lock();
+//        pool.add(message);
+//        if (pool.size() == 1000) {
+//
+//            pool.clear();
+//        }
+//        lock.writeLock().unlock();
+//    }
+//
+//    public void addMessage(JSONObject message) {
+//        lock.writeLock().lock();
+//        pool.add(new Message(message));
+//        if (pool.size() == 1000) {
+//            dumpToFile(cache);
+//            pool.clear();
+//        }
+//        lock.writeLock().unlock();
+//    }
+//
+//
+//
+//    public JSONObject getMessageChunk() {
+//        JSONObject answer;
+//
+//        lock.readLock().lock();
+//            answer = new JSONObject(pool);
+//        lock.readLock().unlock();
+//
+//        return answer;
+//    }
+//
+//    public void dumpToFile() {
+//        FileHandler fileHandler = new FileHandler("target");
+//        try {
+//            fileHandler.dumpFile(toJson());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public JSONObject toJson() {
+//        return new JSONObject().put("history", pool);
+//    }
 }
